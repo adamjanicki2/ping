@@ -1,5 +1,5 @@
+import axios, { AxiosResponse } from "axios";
 import isHtml from "is-html";
-import qs from "qs";
 
 export const HTTP_METHODS = ["GET", "POST"] as const;
 export type HttpMethod = typeof HTTP_METHODS[number];
@@ -34,67 +34,65 @@ export type PingResponse = {
   html?: string;
   json?: Object;
   duration?: number;
+  type: "error" | "text" | "json" | "html" | "img";
 };
 
 async function httpRequest(config: RequestConfig): Promise<PingResponse> {
   let { method, url, params, body, headers } = config;
-  if (params && Object.keys(params).length > 0) {
-    url += "?" + qs.stringify(params);
-  }
 
-  const args: RequestInit = {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  };
-
-  let res: Response;
+  let response: AxiosResponse;
   let duration: number;
+
   try {
     const start = performance.now();
-    res = await fetch(url, args);
+    response = await axios({
+      method,
+      url,
+      params,
+      headers,
+      data: body,
+      // Don't error on 4XX or 5XX codes; we'll handle it!
+      validateStatus: () => true,
+      // 5s timeout
+      timeout: 5000,
+    });
     const end = performance.now();
     duration = Math.floor(end - start);
   } catch (error: any) {
     return {
+      type: "error",
       url,
       error: new Error(
-        `${method} request to ${url} failed with error: ${error}`
+        `${method} request to ${url} failed with error: ${error.message}`
       ),
     };
   }
 
-  let text: string;
-  try {
-    text = await res.text();
-  } catch (error: any) {
-    return {
-      url,
-      error: new Error(
-        `${method} request to ${url} succeeded but text parsing failed with error: ${error}`
-      ),
-    };
-  }
+  const { status: statusCode, data } = response;
 
-  const statusCode = res.status;
+  url = response.config.url || url;
+  console.warn(response.config);
+
   const pingResponse = {
     url,
     statusCode,
-    text,
     duration,
+    text: "",
   };
 
-  // try parsing the various ways
-  try {
-    const json = JSON.parse(text);
-    return { ...pingResponse, json };
-  } catch {
-    // nothing move on
+  const contentType = response.headers["content-type"];
+  if (contentType && contentType.startsWith("image/")) {
+    return { ...pingResponse, text: url, type: "img" };
   }
 
-  if (isHtml(text)) {
-    return { ...pingResponse, html: text };
+  pingResponse.text = typeof data === "string" ? data : JSON.stringify(data);
+  if (typeof data === "object") {
+    return { ...pingResponse, json: data, type: "json" };
   }
 
-  return pingResponse;
+  if (isHtml(pingResponse.text)) {
+    return { ...pingResponse, html: pingResponse.text, type: "html" };
+  }
+
+  return { ...pingResponse, type: "text" };
 }

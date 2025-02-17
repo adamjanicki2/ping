@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Animated, UnstyledButton } from "@adamjanicki/ui";
-import { classNames } from "@adamjanicki/ui/functions";
 import {
   faChevronDown,
   faChevronRight,
@@ -23,7 +22,7 @@ export default function Accordion({
   const [show, setShow] = useState(false);
 
   return (
-    <div className={classNames("", className)}>
+    <div className={className}>
       <UnstyledButton onClick={() => setShow(!show)} className="w-100 flex pa2">
         <FontAwesomeIcon
           style={{ marginRight: show ? 4 : 10 }}

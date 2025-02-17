@@ -1,4 +1,4 @@
-import { Button, Input, Select } from "@adamjanicki/ui";
+import { Animated, Button, Input, Select } from "@adamjanicki/ui";
 import { useEffect, useState } from "react";
 import PageWrapper from "src/components/PageWrapper";
 import {
@@ -12,10 +12,21 @@ import {
 import useCache from "src/hooks/useCache";
 import Accordion from "src/components/Accordion";
 import Response from "src/pages/request/Response";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronDown,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 const methodToFunc = {
   GET: get,
   POST: post,
+} as const;
+
+const labels = {
+  params: "Query parameters",
+  body: "Body",
+  headers: "Headers",
 } as const;
 
 const additionalInputs: Record<HttpMethod, RequestArgs> = {
@@ -32,6 +43,7 @@ export default function Request() {
 }
 
 function RequestUi() {
+  const [showParams, setShowParams] = useState(false);
   const [method, setMethod] = useState<HttpMethod>("GET");
   const { cache, setCache } = useCache();
   const cachedUrl = cache[method] || "";
@@ -97,86 +109,110 @@ function RequestUi() {
           Send it
         </Button>
       </div>
-      {Object.entries(args).map(([key, value], i) => {
-        const [newArgKey, newArgValue] = newArgs[key as keyof RequestArgs];
-        const handleAdd = () => {
-          setArgs({
-            ...args,
-            [key]: {
-              ...args[key as keyof RequestArgs],
-              [newArgKey]: newArgValue,
-            },
-          });
-          setNewArgs({
-            ...newArgs,
-            [key]: ["", ""],
-          });
-        };
-        const onEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-          if (e.key === "Enter" && newArgKey && newArgValue) {
-            handleAdd();
-          }
-        };
-        return (
-          <Accordion key={i} label={key} divider>
-            <div className="mb3">
-              {Object.entries(value).map(([argKey, argValue], j) => (
-                <div className="mv1" key={j}>
-                  <Button
-                    className="mr2"
-                    size="small"
-                    variant="secondary"
-                    onClick={() =>
-                      setArgs((prev) => {
-                        const copy = { ...prev };
-                        delete (copy[key as keyof RequestArgs] as any)[argKey];
-                        return copy;
+      <Button
+        className="mr2"
+        style={{ width: "fit-content" }}
+        size="small"
+        variant="secondary"
+        onClick={() => setShowParams(!showParams)}
+      >
+        <FontAwesomeIcon icon={showParams ? faChevronDown : faChevronRight} />{" "}
+        {showParams ? "Hide config" : "Show config"}
+      </Button>
+      <Animated
+        visible={showParams}
+        className="w-100"
+        enter={{ style: { opacity: 1 } }}
+        exit={{ style: { opacity: 0 } }}
+      >
+        {Object.entries(args).map(([key, value], i) => {
+          const [newArgKey, newArgValue] = newArgs[key as keyof RequestArgs];
+          const handleAdd = () => {
+            setArgs({
+              ...args,
+              [key]: {
+                ...args[key as keyof RequestArgs],
+                [newArgKey]: newArgValue,
+              },
+            });
+            setNewArgs({
+              ...newArgs,
+              [key]: ["", ""],
+            });
+          };
+          const onEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === "Enter" && newArgKey && newArgValue) {
+              handleAdd();
+            }
+          };
+          return (
+            <Accordion
+              key={i}
+              label={labels[key as keyof typeof labels]}
+              divider
+            >
+              <div className="mb3">
+                {Object.entries(value).map(([argKey, argValue], j) => (
+                  <div className="mv1" key={j}>
+                    <Button
+                      className="mr2"
+                      size="small"
+                      variant="secondary"
+                      onClick={() =>
+                        setArgs((prev) => {
+                          const copy = { ...prev };
+                          delete (copy[key as keyof RequestArgs] as any)[
+                            argKey
+                          ];
+                          return copy;
+                        })
+                      }
+                    >
+                      Delete
+                    </Button>
+                    <span className="monospace f5">
+                      {argKey} : {argValue}
+                    </span>
+                  </div>
+                ))}
+                <div className="flex items-center mv1">
+                  <Input
+                    placeholder="key"
+                    value={newArgKey}
+                    onChange={(e) =>
+                      setNewArgs({
+                        ...newArgs,
+                        [key]: [e.target.value, newArgValue],
                       })
                     }
-                  >
-                    Delete
-                  </Button>
-                  <span className="monospace f5">
-                    {argKey} : {argValue}
-                  </span>
+                    onKeyUp={onEnter}
+                  />
+                  <span className="mh2">:</span>
+                  <Input
+                    placeholder="value"
+                    value={newArgValue}
+                    onChange={(e) =>
+                      setNewArgs({
+                        ...newArgs,
+                        [key]: [newArgKey, e.target.value],
+                      })
+                    }
+                    onKeyUp={onEnter}
+                  />
                 </div>
-              ))}
-              <div className="flex items-center mv1">
-                <Input
-                  placeholder="key"
-                  value={newArgKey}
-                  onChange={(e) =>
-                    setNewArgs({
-                      ...newArgs,
-                      [key]: [e.target.value, newArgValue],
-                    })
-                  }
-                  onKeyUp={onEnter}
-                />
-                <span className="mh2">:</span>
-                <Input
-                  placeholder="value"
-                  value={newArgValue}
-                  onChange={(e) =>
-                    setNewArgs({
-                      ...newArgs,
-                      [key]: [newArgKey, e.target.value],
-                    })
-                  }
-                  onKeyUp={onEnter}
-                />
+                <Button
+                  className="mt1"
+                  disabled={!newArgKey || !newArgValue}
+                  onClick={handleAdd}
+                >
+                  Add
+                </Button>
               </div>
-              <Button
-                className="mt1"
-                disabled={!newArgKey || !newArgValue}
-                onClick={handleAdd}
-              >
-                Add
-              </Button>
-            </div>
-          </Accordion>
-        );
-      })}
+            </Accordion>
+          );
+        })}
+      </Animated>
+
       <Response response={response} />
     </div>
   );

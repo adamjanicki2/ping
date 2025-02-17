@@ -393,14 +393,13 @@ export function getBadgeType(type: HttpCodeType): ContentType {
   switch (type) {
     case "client-error":
     case "server-error":
+    case "unknown":
       return "error";
     case "info":
     case "success":
       return type;
     case "redirect":
       return "info";
-    case "unknown":
-      return "static";
     default:
       throw new Error();
   }
