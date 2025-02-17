@@ -14,7 +14,7 @@ const PageWrapper = ({
   documentTitle,
   titleClass = "",
 }: Props) => {
-  useDocumentTitle(`${documentTitle ?? title}`);
+  useDocumentTitle(`${documentTitle ?? title} | Ping`);
 
   return (
     <div

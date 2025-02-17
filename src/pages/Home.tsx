@@ -1,15 +1,24 @@
-import PageWrapper from "src/components/PageWrapper";
+import { useEffect } from "react";
+import Link from "src/components/Link";
+import { ReactComponent as Logo } from "src/img/logo.svg";
 
-const Home = () => (
-  <PageWrapper title="Home">
-    <p className="tc f4 fw4">
-      You should run <code>setup.py</code> to auto-rename a bunch of strings.{" "}
-      <br />
-      You can search for <code>skeleton</code> in your editor to find all places
-      where you should make your own changes if you really want to do it
-      manually
-    </p>
-  </PageWrapper>
-);
-
-export default Home;
+export default function Home() {
+  useEffect(() => {
+    document.title = "Ping";
+  }, []);
+  return (
+    <div className="flex flex-column items-center pv4">
+      <div className="flex items-center pa4">
+        <Logo className="spinning" />
+        <h1 className="home-title-text ma0 ml3">Ping</h1>
+      </div>
+      <p className="ph4 tc home-description">
+        Your friendly neighborhood tool for testing API endpoints and URLs,
+        delivering real-time responses in JSON, text, or HTML.
+      </p>
+      <Link className="home-description" to="/request">
+        Get started
+      </Link>
+    </div>
+  );
+}

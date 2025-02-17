@@ -1,0 +1,8 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#055437" stroke-width="32">
+  <!-- Inner radar ring -->
+  <circle cx="256" cy="256" r="240" />
+  <!-- Outer radar ring (extends to edge of viewbox) -->
+  <circle cx="256" cy="256" r="128"  />
+  <!-- Correctly calculated radar sweep line -->
+  <path d="M 256 256 L 425.706 86.294" stroke-linecap="round" />
+</svg>

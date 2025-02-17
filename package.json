@@ -1,16 +1,22 @@
 {
-  "name": "react-skeleton",
+  "name": "ping",
   "version": "0.1.0",
-  "homepage": "https://adamjanicki.xyz/react-skeleton",
+  "homepage": "https://adamjanicki.xyz/ping",
   "private": true,
   "dependencies": {
-    "@adamjanicki/ui": "^1.5.0",
+    "@adamjanicki/ui": "^1.5.4",
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "is-html": "^3.1.0",
+    "qs": "^6.14.0",
     "react": ">=18",
     "react-dom": ">=18",
     "react-router": "^7.1.5",
     "react-scripts": "5.0.1",
     "tachyons": "^4.12.0",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "zustand": "^5.0.3"
   },
   "scripts": {
     "start": "react-scripts start",

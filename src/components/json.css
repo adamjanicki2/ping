@@ -1,0 +1,37 @@
+.json-comma {
+}
+
+.json-primitive {
+  font-weight: 600;
+}
+
+.json-primitive-boolean {
+  color: darkgoldenrod;
+}
+
+.json-primitive-number,
+.json-primitive-bigint,
+.json-primitive-object,
+.json-primitive-undefined {
+  color: blue;
+}
+
+.json-primitive-string {
+  color: green;
+  font-weight: 300;
+}
+.json-primitive-function {
+  font-weight: 300;
+}
+
+.json-key {
+}
+
+.json-token {
+}
+
+.json-elements-container {
+  /* border-left: 1px dotted black; */
+  padding-left: 16px;
+  margin-left: 4px;
+}
