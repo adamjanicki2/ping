@@ -6,7 +6,6 @@ import About from "src/pages/About";
 import Home from "src/pages/Home";
 import NotFound from "src/pages/NotFound";
 import Request from "src/pages/request/Request";
-import Sandbox from "src/pages/Sandbox";
 import StatusCodes from "src/pages/StatusCodes";
 
 const App = () => {
@@ -19,7 +18,6 @@ const App = () => {
         <Route path="/about/" element={<About />} />
         <Route path="/request/" element={<Request />} />
         <Route path="/status-codes/" element={<StatusCodes />} />
-        <Route path="/sandbox/" element={<Sandbox />} />
         {/* Make sure this is the last route */}
         <Route path="*" element={<NotFound />} />
       </Routes>

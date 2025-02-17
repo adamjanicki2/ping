@@ -1,4 +1,12 @@
+.json-tree * {
+  font-size: 14px;
+}
+
 .json-comma {
+}
+
+.json-comment {
+  color: darkolivegreen;
 }
 
 .json-primitive {
@@ -31,7 +39,17 @@
 }
 
 .json-elements-container {
-  /* border-left: 1px dotted black; */
-  padding-left: 16px;
+  border-left: 1px dotted #999;
+  padding-left: 20px;
   margin-left: 4px;
+}
+
+@media only screen and (max-width: 768px) {
+  .json-tree * {
+    font-size: 12px;
+  }
+  .json-elements-container {
+    padding-left: 12px;
+    margin-left: 3px;
+  }
 }

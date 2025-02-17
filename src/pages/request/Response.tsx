@@ -10,16 +10,18 @@ export default function Response({ response }: { response?: PingResponse }) {
   const [showIframe, setShowIframe] = useState(true);
 
   if (!response) return null;
-  const Wrapper = (props: {
-    children: React.ReactNode | React.ReactNode[];
-  }) => (
+
+  const Wrapper = ({ children }: { children: React.ReactNode }) => (
     <div
       id="response"
-      {...props}
       className="flex flex-column w-100 mt3 br2 ba b--moon-gray"
-    />
+    >
+      {children}
+    </div>
   );
+
   let { statusCode, text, json, html, duration, error, url, type } = response;
+
   if (error) {
     return (
       <Wrapper>
@@ -30,6 +32,7 @@ export default function Response({ response }: { response?: PingResponse }) {
       </Wrapper>
     );
   }
+
   statusCode = assertDefined(statusCode);
   duration = assertDefined(duration);
   text = assertDefined(text);
@@ -135,7 +138,7 @@ function HtmlResponse({
   );
 }
 
-function JsonResponse({ children }: { children: Object }) {
+function JsonResponse({ children }: { children: object }) {
   return (
     <ResponseContentWrapper>
       <JsonTree className="mv2">{children}</JsonTree>

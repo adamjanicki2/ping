@@ -38,7 +38,7 @@ export type PingResponse = {
 };
 
 async function httpRequest(config: RequestConfig): Promise<PingResponse> {
-  let { method, url, params, body, headers } = config;
+  const { method, url, params, body, headers } = config;
 
   let response: AxiosResponse;
   let duration: number;
@@ -69,9 +69,6 @@ async function httpRequest(config: RequestConfig): Promise<PingResponse> {
   }
 
   const { status: statusCode, data } = response;
-
-  url = response.config.url || url;
-  console.warn(response.config);
 
   const pingResponse = {
     url,

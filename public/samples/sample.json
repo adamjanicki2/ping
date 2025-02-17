@@ -1,0 +1,117 @@
+{
+  "movies": [
+    {
+      "id": "movie123",
+      "title": "Inception",
+      "releaseYear": 2010,
+      "genre": "Science Fiction",
+      "director": "Christopher Nolan",
+      "cast": [
+        {
+          "actor": "Leonardo DiCaprio",
+          "role": "Dom Cobb"
+        },
+        {
+          "actor": "Joseph Gordon-Levitt",
+          "role": "Arthur"
+        }
+      ],
+      "ratings": {
+        "averageRating": 8.8,
+        "ratingCount": 150000
+      },
+      "isPlayingInTheaters": false,
+      "reviews": [
+        {
+          "reviewId": "review001",
+          "userId": "user123",
+          "rating": 9,
+          "reviewText": "A mind-bending thriller that keeps you on the edge of your seat.",
+          "metadata": {
+            "reviewDate": "2024-02-15",
+            "helpfulVotes": 120,
+            "location": "New York, USA",
+            "device": "iPhone 12",
+            "isHelpful": true
+          }
+        },
+        {
+          "reviewId": "review002",
+          "userId": "user456",
+          "rating": 7,
+          "reviewText": "Visually stunning but a bit complex to follow.",
+          "metadata": {
+            "reviewDate": "2024-02-14",
+            "helpfulVotes": 80,
+            "location": "Los Angeles, USA",
+            "device": "Samsung Galaxy S21",
+            "isHelpful": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "movie124",
+      "title": "The Dark Knight",
+      "releaseYear": 2008,
+      "genre": "Action",
+      "director": "Christopher Nolan",
+      "cast": [
+        {
+          "actor": "Christian Bale",
+          "role": "Bruce Wayne / Batman"
+        },
+        {
+          "actor": "Heath Ledger",
+          "role": "Joker"
+        }
+      ],
+      "ratings": {
+        "averageRating": 9.0,
+        "ratingCount": 200000
+      },
+      "isPlayingInTheaters": false,
+      "reviews": [
+        {
+          "reviewId": "review003",
+          "userId": "user789",
+          "rating": 10,
+          "reviewText": "An exceptional portrayal of the Batman saga with a legendary performance by Heath Ledger.",
+          "metadata": {
+            "reviewDate": "2024-02-13",
+            "helpfulVotes": 150,
+            "location": "Chicago, USA",
+            "device": "MacBook Pro",
+            "isHelpful": true
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "userId": "user123",
+      "username": "john_doe",
+      "email": "john.doe@example.com",
+      "joinDate": "2023-05-10",
+      "location": "New York, USA",
+      "profilePicture": "https://example.com/profiles/john_doe.jpg"
+    },
+    {
+      "userId": "user456",
+      "username": "jane_smith",
+      "email": "jane.smith@example.com",
+      "joinDate": "2023-06-15",
+      "location": "Los Angeles, USA",
+      "profilePicture": "https://example.com/profiles/jane_smith.jpg"
+    },
+    {
+      "userId": "user789",
+      "username": "mike_jones",
+      "email": "mike.jones@example.com",
+      "joinDate": "2023-07-20",
+      "location": "Chicago, USA",
+      "profilePicture": "https://example.com/profiles/mike_jones.jpg"
+    }
+  ]
+}

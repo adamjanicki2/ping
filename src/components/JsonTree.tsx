@@ -1,5 +1,6 @@
+import { UnstyledButton } from "@adamjanicki/ui";
 import { classNames } from "@adamjanicki/ui/functions";
-import React from "react";
+import React, { useState } from "react";
 import "src/components/json.css";
 
 type Props = {
@@ -10,7 +11,10 @@ type Props = {
 
 export default function JsonTree({ children, className, style }: Props) {
   return (
-    <div className={classNames("monospace", className)} style={style}>
+    <div
+      className={classNames("json-tree monospace", className)}
+      style={{ ...style, whiteSpace: "pre-wrap", overflowWrap: "break-word" }}
+    >
       <Tree>{children}</Tree>
     </div>
   );
@@ -22,14 +26,20 @@ type TreeProps = {
 };
 
 function Tree({ children: data, includeComma = false }: TreeProps) {
+  const [collapsed, setCollapsed] = useState(false);
   const type = typeof data;
   const comma = includeComma ? <span className="json-comma">,</span> : null;
+
   if (Array.isArray(data)) {
-    const showArrayElement = Boolean(data.length);
+    const arraySize = data.length;
     return (
       <>
-        <span className="json-token">{"["}</span>
-        {showArrayElement && (
+        <span className="json-token">
+          <UnstyledButton onClick={() => setCollapsed(!collapsed)}>
+            {collapsed ? "[…" : "["}
+          </UnstyledButton>
+        </span>
+        {arraySize > 0 && !collapsed && (
           <div className="json-elements-container">
             {data.map((node, index) => (
               <div key={index}>
@@ -39,27 +49,37 @@ function Tree({ children: data, includeComma = false }: TreeProps) {
           </div>
         )}
         <span className="json-token">{"]"}</span>
-        {comma}
+        {comma}{" "}
+        {collapsed && (
+          <span className="json-comment">// {arraySize} elements</span>
+        )}
       </>
     );
   } else if (type === "object" && data) {
     const entries = Object.entries(data);
-    const showObjectElements = Boolean(entries.length);
+    const objectSize = entries.length;
     return (
       <>
-        <span className="json-token">{"{"}</span>
-        {showObjectElements && (
+        <span className="json-token">
+          <UnstyledButton onClick={() => setCollapsed(!collapsed)}>
+            {collapsed ? "{…" : "{"}
+          </UnstyledButton>
+        </span>
+        {entries.length > 0 && !collapsed && (
           <div className="json-elements-container">
             {entries.map(([key, value], i) => (
               <div key={i}>
-                <span className="json-key">{key}:</span>{" "}
+                <span className="json-key">"{key}":</span>{" "}
                 <Tree includeComma={i < entries.length - 1}>{value}</Tree>
               </div>
             ))}
           </div>
         )}
         <span className="json-token">{"}"}</span>
-        {comma}
+        {comma}{" "}
+        {collapsed && (
+          <span className="json-comment">// {objectSize} entries</span>
+        )}
       </>
     );
   }
