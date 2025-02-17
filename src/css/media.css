@@ -16,4 +16,7 @@
   .request-container {
     width: 100%;
   }
+  .input-container {
+    flex-direction: column;
+  }
 }

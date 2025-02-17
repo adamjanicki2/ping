@@ -2,9 +2,11 @@ import { Badge, Button } from "@adamjanicki/ui";
 import { assertDefined } from "@adamjanicki/ui/functions";
 import { useState } from "react";
 import JsonTree from "src/components/JsonTree";
+import { UnstyledLink } from "src/components/Link";
 import { classifyCode, getBadgeType } from "src/helpers/codes";
 import { PingResponse } from "src/helpers/http";
 import CopyButton from "src/pages/CopyButton";
+import { formatBytes } from "src/util";
 
 export default function Response({ response }: { response?: PingResponse }) {
   const [showIframe, setShowIframe] = useState(true);
@@ -20,7 +22,8 @@ export default function Response({ response }: { response?: PingResponse }) {
     </div>
   );
 
-  let { statusCode, text, json, html, duration, error, url, type } = response;
+  let { statusCode, text, json, html, duration, error, url, type, size } =
+    response;
 
   if (error) {
     return (
@@ -48,11 +51,16 @@ export default function Response({ response }: { response?: PingResponse }) {
     <Wrapper>
       <div className="flex items-center justify-between pa2 bg-light-gray br2 br--top">
         <span className="flex items-center">
-          <Badge type={getBadgeType(info.type)}>
-            {statusCode} {info.name}
-          </Badge>
-          <span className="f6 fw7 mh2">{duration}ms</span>
-          <Badge type="info">{typeToLabel[type]}</Badge>
+          <UnstyledLink to={`/status-codes#${statusCode}`}>
+            <Badge type={getBadgeType(info.type)}>
+              {statusCode} {info.name}
+            </Badge>
+          </UnstyledLink>
+          <span className="fw7 mh2" style={{ color: "#055437" }}>
+            {typeToLabel[type]}
+          </span>
+          <span className="f6 fw7">{duration}ms</span>
+          {size && <span className="f6 fw7 ml2">{formatBytes(size)}</span>}
         </span>
         <div className="flex items-center">
           {html && (
@@ -124,12 +132,12 @@ function HtmlResponse({
         <iframe
           title="HTML display"
           src={url}
-          sandbox="allow-scripts"
+          sandbox="allow-scripts allow-popups"
           referrerPolicy="no-referrer"
           width="100%"
           height="100%"
           className="mv2"
-          style={{ minHeight: "40vh", border: "none" }}
+          style={{ minHeight: "45vh", border: "none" }}
         />
       ) : (
         <p>{html.trim()}</p>

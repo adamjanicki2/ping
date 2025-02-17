@@ -20,6 +20,7 @@
 .json-primitive-number,
 .json-primitive-bigint,
 .json-primitive-object,
+.json-primitive-symbol,
 .json-primitive-undefined {
   color: blue;
 }
@@ -27,6 +28,9 @@
 .json-primitive-string {
   color: green;
   font-weight: 300;
+}
+.json-primitive-string-url {
+  color: purple;
 }
 .json-primitive-function {
   font-weight: 300;
@@ -51,5 +55,11 @@
   .json-elements-container {
     padding-left: 12px;
     margin-left: 3px;
+  }
+}
+
+@media (hover: hover) {
+  .json-primitive-string-url:hover > * {
+    text-decoration: underline;
   }
 }

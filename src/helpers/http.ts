@@ -27,6 +27,7 @@ export async function post(config: PostConfig) {
 }
 
 export type PingResponse = {
+  id: string; // randomness for rendering performance things
   url: string;
   error?: Error;
   text?: string;
@@ -35,6 +36,7 @@ export type PingResponse = {
   json?: Object;
   duration?: number;
   type: "error" | "text" | "json" | "html" | "img";
+  size?: number;
 };
 
 async function httpRequest(config: RequestConfig): Promise<PingResponse> {
@@ -42,6 +44,7 @@ async function httpRequest(config: RequestConfig): Promise<PingResponse> {
 
   let response: AxiosResponse;
   let duration: number;
+  const id = Math.random().toString();
 
   try {
     const start = performance.now();
@@ -60,6 +63,7 @@ async function httpRequest(config: RequestConfig): Promise<PingResponse> {
     duration = Math.floor(end - start);
   } catch (error: any) {
     return {
+      id,
       type: "error",
       url,
       error: new Error(
@@ -70,11 +74,16 @@ async function httpRequest(config: RequestConfig): Promise<PingResponse> {
 
   const { status: statusCode, data } = response;
 
+  let size = response.headers["content-length"];
+  size = size ? (size as number) : undefined;
+
   const pingResponse = {
+    id,
     url,
     statusCode,
     duration,
     text: "",
+    size,
   };
 
   const contentType = response.headers["content-type"];

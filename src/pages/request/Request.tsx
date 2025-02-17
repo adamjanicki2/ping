@@ -1,5 +1,5 @@
 import { Animated, Button, Input, Select } from "@adamjanicki/ui";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PageWrapper from "src/components/PageWrapper";
 import {
   type HttpMethod,
@@ -79,19 +79,26 @@ function RequestUi() {
     setCache(method, url);
   };
 
+  const memoizedResponse = useMemo(
+    () => <Response response={response} />,
+    // eslint-disable-next-line
+    [response?.id]
+  );
+
   return (
     <div className="flex flex-column ph4 request-container">
-      <div className="flex items-center mv2">
+      <div className="flex flex-wrap justify-center items-center mb3">
         <Select
-          className="bg-white"
+          className="bg-white mt2"
           options={[...HTTP_METHODS]}
           aria-label="method"
           value={method}
           onChange={(e) => setMethod(e.target.value as HttpMethod)}
+          style={{ width: "max-content" }}
         />
         <Input
           style={{ flexGrow: 1 }}
-          className="mh2"
+          className="mh2 mt2"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="URL"
@@ -104,7 +111,8 @@ function RequestUi() {
         <Button
           onClick={doRequest}
           disabled={!url.trim()}
-          style={{ padding: "12px 16px" }}
+          className="mt2"
+          style={{ padding: "12px 16px", whiteSpace: "nowrap" }}
         >
           Send it
         </Button>
@@ -212,8 +220,7 @@ function RequestUi() {
           );
         })}
       </Animated>
-
-      <Response response={response} />
+      {memoizedResponse}
     </div>
   );
 }
