@@ -1,117 +1,165 @@
 {
-  "movies": [
+  "reviews": [
     {
-      "id": "movie123",
+      "id": 1,
       "title": "Inception",
+      "author": { "username": "Adam" },
+      "score": 90,
+      "url": "https://adamovies.com/review/inception",
       "releaseYear": 2010,
-      "genre": "Science Fiction",
+      "genres": ["Action", "Adventure", "Sci-Fi"],
+      "poster": "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg",
       "director": "Christopher Nolan",
-      "cast": [
-        {
-          "actor": "Leonardo DiCaprio",
-          "role": "Dom Cobb"
-        },
-        {
-          "actor": "Joseph Gordon-Levitt",
-          "role": "Arthur"
-        }
-      ],
-      "ratings": {
-        "averageRating": 8.8,
-        "ratingCount": 150000
-      },
-      "isPlayingInTheaters": false,
-      "reviews": [
-        {
-          "reviewId": "review001",
-          "userId": "user123",
-          "rating": 9,
-          "reviewText": "A mind-bending thriller that keeps you on the edge of your seat.",
-          "metadata": {
-            "reviewDate": "2024-02-15",
-            "helpfulVotes": 120,
-            "location": "New York, USA",
-            "device": "iPhone 12",
-            "isHelpful": true
-          }
-        },
-        {
-          "reviewId": "review002",
-          "userId": "user456",
-          "rating": 7,
-          "reviewText": "Visually stunning but a bit complex to follow.",
-          "metadata": {
-            "reviewDate": "2024-02-14",
-            "helpfulVotes": 80,
-            "location": "Los Angeles, USA",
-            "device": "Samsung Galaxy S21",
-            "isHelpful": false
-          }
-        }
-      ]
+      "rating": "PG-13",
+      "runtime": 148,
+      "type": "movie",
+      "created": "2021-01-29T16:28",
+      "updated": "2023-07-11T12:13"
     },
     {
-      "id": "movie124",
-      "title": "The Dark Knight",
+      "id": 2,
+      "title": "Batman Begins",
+      "author": { "username": "Adam" },
+      "score": 73,
+      "url": "https://adamovies.com/review/batman-begins",
+      "releaseYear": 2005,
+      "genres": ["Action", "Crime", "Superhero"],
+      "poster": "https://m.media-amazon.com/images/M/MV5BOTY4YjI2N2MtYmFlMC00ZjcyLTg3YjEtMDQyM2ZjYzQ5YWFkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg",
+      "director": "Christopher Nolan",
+      "rating": "PG-13",
+      "runtime": 140,
+      "type": "movie",
+      "created": "2021-01-29T16:46",
+      "updated": "2023-05-12T14:32"
+    },
+    {
+      "id": 3,
+      "title": "Breaking Bad",
+      "season": 1,
+      "author": { "username": "Adam" },
+      "score": 61,
+      "url": "https://adamovies.com/review/breaking-bad-s1",
       "releaseYear": 2008,
-      "genre": "Action",
+      "genres": ["Drama"],
+      "poster": "https://static.wikia.nocookie.net/breakingbad/images/5/58/BB_S1_poster.jpg",
+      "director": "Vince Gilligan",
+      "rating": "TV-MA",
+      "type": "series",
+      "created": "2021-02-03T20:16",
+      "updated": "2021-02-03T20:16"
+    },
+    {
+      "id": 4,
+      "title": "Interstellar",
+      "author": { "username": "Adam" },
+      "score": 96,
+      "url": "https://adamovies.com/review/interstellar",
+      "releaseYear": 2014,
+      "genres": ["Adventure", "Sci-Fi"],
+      "poster": "https://m.media-amazon.com/images/M/MV5BNDYzODY0NDcxNF5BMl5BanBnXkFtZTgwNTAzOTQ3MTE@._V1_.jpg",
       "director": "Christopher Nolan",
-      "cast": [
-        {
-          "actor": "Christian Bale",
-          "role": "Bruce Wayne / Batman"
-        },
-        {
-          "actor": "Heath Ledger",
-          "role": "Joker"
-        }
-      ],
-      "ratings": {
-        "averageRating": 9.0,
-        "ratingCount": 200000
-      },
-      "isPlayingInTheaters": false,
-      "reviews": [
-        {
-          "reviewId": "review003",
-          "userId": "user789",
-          "rating": 10,
-          "reviewText": "An exceptional portrayal of the Batman saga with a legendary performance by Heath Ledger.",
-          "metadata": {
-            "reviewDate": "2024-02-13",
-            "helpfulVotes": 150,
-            "location": "Chicago, USA",
-            "device": "MacBook Pro",
-            "isHelpful": true
-          }
-        }
-      ]
-    }
-  ],
-  "users": [
-    {
-      "userId": "user123",
-      "username": "john_doe",
-      "email": "john.doe@example.com",
-      "joinDate": "2023-05-10",
-      "location": "New York, USA",
-      "profilePicture": "https://example.com/profiles/john_doe.jpg"
+      "rating": "PG-13",
+      "runtime": 169,
+      "type": "movie",
+      "created": "2021-02-11T10:55",
+      "updated": "2024-12-08T13:42"
     },
     {
-      "userId": "user456",
-      "username": "jane_smith",
-      "email": "jane.smith@example.com",
-      "joinDate": "2023-06-15",
-      "location": "Los Angeles, USA",
-      "profilePicture": "https://example.com/profiles/jane_smith.jpg"
+      "id": 5,
+      "title": "The Silence of the Lambs",
+      "author": { "username": "Adam" },
+      "score": 88,
+      "url": "https://adamovies.com/review/the-silence-of-the-lambs",
+      "releaseYear": 1991,
+      "genres": ["Drama", "Horror", "Thriller"],
+      "poster": "https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWE1MmEtYzM1M2ZmMGMwMTU4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg",
+      "director": "Jonathan Demme",
+      "rating": "R",
+      "runtime": 118,
+      "type": "movie",
+      "created": "2021-02-14T05:43",
+      "updated": "2023-11-20T18:00"
     },
     {
-      "userId": "user789",
-      "username": "mike_jones",
-      "email": "mike.jones@example.com",
-      "joinDate": "2023-07-20",
-      "location": "Chicago, USA",
-      "profilePicture": "https://example.com/profiles/mike_jones.jpg"
+      "id": 6,
+      "title": "Kill Bill: Vol. 1",
+      "author": { "username": "Adam" },
+      "score": 84,
+      "url": "https://adamovies.com/review/kill-bill-vol-1",
+      "releaseYear": 2003,
+      "genres": ["Action", "Crime", "Thriller"],
+      "poster": "https://m.media-amazon.com/images/M/MV5BNzM3NDFhYTAtYmU5Mi00NGRmLTljYjgtMDkyODQ4MjNkMGY2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg",
+      "director": "Quentin Tarantino",
+      "rating": "R",
+      "runtime": 111,
+      "type": "movie",
+      "created": "2021-02-24T10:16",
+      "updated": "2023-11-20T18:02"
+    },
+    {
+      "id": 7,
+      "title": "Kill Bill: Vol. 2",
+      "author": { "username": "Adam" },
+      "score": 80,
+      "url": "https://adamovies.com/review/kill-bill-vol-2",
+      "releaseYear": 2004,
+      "genres": ["Action", "Crime", "Thriller"],
+      "poster": "https://m.media-amazon.com/images/M/MV5BNmFiYmJmN2QtNWQwMi00MzliLThiOWMtZjQxNGRhZTQ1MjgyXkEyXkFqcGdeQXVyNzQ1ODk3MTQ@._V1_.jpg",
+      "director": "Quentin Tarantino",
+      "rating": "R",
+      "runtime": 137,
+      "type": "movie",
+      "created": "2021-02-24T10:16",
+      "updated": "2023-11-20T18:03"
+    },
+    {
+      "id": 8,
+      "title": "Jurassic Park",
+      "author": { "username": "Adam" },
+      "score": 90,
+      "url": "https://adamovies.com/review/jurassic-park",
+      "releaseYear": 1993,
+      "genres": ["Action", "Adventure", "Sci-Fi"],
+      "poster": "https://m.media-amazon.com/images/M/MV5BMjM2MDgxMDg0Nl5BMl5BanBnXkFtZTgwNTM2OTM5NDE@._V1_.jpg",
+      "director": "Steven Spielberg",
+      "rating": "PG-13",
+      "runtime": 127,
+      "type": "movie",
+      "created": "2021-03-04T19:59",
+      "updated": "2024-08-13T00:02"
+    },
+    {
+      "id": 9,
+      "title": "WandaVision",
+      "season": null,
+      "author": { "username": "Adam" },
+      "score": 78,
+      "url": "https://adamovies.com/review/wandavision",
+      "releaseYear": 2021,
+      "genres": ["Superhero", "Comedy"],
+      "poster": "https://m.media-amazon.com/images/M/MV5BZGEwYmMwZmMtMTQ3MS00YWNhLWEwMmQtZTU5YTIwZmJjZGQ0XkEyXkFqcGdeQXVyMTI5MzA5MjA1._V1_.jpg",
+      "director": "Jac Schaeffer",
+      "rating": "TV-PG",
+      "runtime": null,
+      "type": "series",
+      "created": "2021-03-07T16:35",
+      "updated": "2023-09-25T13:43"
+    },
+    {
+      "id": 10,
+      "title": "Raiders of the Lost Ark",
+      "author": { "username": "Adam" },
+      "score": 92,
+      "url": "https://adamovies.com/review/raiders-of-the-lost-ark",
+      "releaseYear": 1981,
+      "genres": ["Action", "Adventure"],
+      "poster": "https://m.media-amazon.com/images/M/MV5BNTU2ODkyY2MtMjU1NC00NjE1LWEzYjgtMWQ3MzRhMTE0NDc0XkEyXkFqcGdeQXVyMjM4MzQ4OTQ@._V1_.jpg",
+      "director": "Steven Spielberg",
+      "rating": "PG",
+      "runtime": 115,
+      "type": "movie",
+      "created": "2021-06-12T05:57",
+      "updated": "2023-11-22T10:15"
     }
   ]
 }

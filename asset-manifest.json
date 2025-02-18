@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.css": "/ping/static/css/main.48e06c60.css",
-    "main.js": "/ping/static/js/main.d16113ab.js",
+    "main.css": "/ping/static/css/main.90ddca4c.css",
+    "main.js": "/ping/static/js/main.dde2eaf6.js",
     "index.html": "/ping/index.html",
     "static/media/logo.svg": "/ping/static/media/logo.9c86b09d1365fc5cbdc4a7f8e3ca67a2.svg"
   },
   "entrypoints": [
-    "static/css/main.48e06c60.css",
-    "static/js/main.d16113ab.js"
+    "static/css/main.90ddca4c.css",
+    "static/js/main.dde2eaf6.js"
   ]
 }
