@@ -1,5 +1,5 @@
-import { Badge, Button } from "@adamjanicki/ui";
-import { assertDefined } from "@adamjanicki/ui/functions";
+import { Badge, Button, UnstyledButton } from "@adamjanicki/ui";
+import { assertDefined, classNames } from "@adamjanicki/ui/functions";
 import { useState } from "react";
 import JsonTree from "src/components/JsonTree";
 import { UnstyledLink } from "src/components/Link";
@@ -7,9 +7,12 @@ import { classifyCode, getBadgeType } from "src/helpers/codes";
 import { PingResponse } from "src/helpers/http";
 import CopyButton from "src/pages/CopyButton";
 import { formatBytes } from "src/util";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import "src/pages/request/response.css";
 
 export default function Response({ response }: { response?: PingResponse }) {
   const [showIframe, setShowIframe] = useState(true);
+  const [showData, setShowData] = useState(true);
 
   if (!response) return null;
 
@@ -22,8 +25,18 @@ export default function Response({ response }: { response?: PingResponse }) {
     </div>
   );
 
-  let { statusCode, text, json, html, duration, error, url, type, size } =
-    response;
+  let {
+    statusCode,
+    text,
+    json,
+    html,
+    duration,
+    error,
+    url,
+    type,
+    size,
+    responseHeaders,
+  } = response;
 
   if (error) {
     return (
@@ -39,6 +52,7 @@ export default function Response({ response }: { response?: PingResponse }) {
   statusCode = assertDefined(statusCode);
   duration = assertDefined(duration);
   text = assertDefined(text);
+  responseHeaders = assertDefined(responseHeaders);
   const info = classifyCode(statusCode);
 
   let section = <TextResponse>{text}</TextResponse>;
@@ -49,7 +63,7 @@ export default function Response({ response }: { response?: PingResponse }) {
 
   return (
     <Wrapper>
-      <div className="flex items-center justify-between pa2 bg-light-gray br2 br--top">
+      <div className="flex items-center justify-between pa2 bg-light-gray br2 br--top flex-wrap bb b--moon-gray">
         <span className="flex items-center">
           <UnstyledLink to={`/status-codes#${statusCode}`}>
             <Badge type={getBadgeType(info.type)}>
@@ -62,7 +76,7 @@ export default function Response({ response }: { response?: PingResponse }) {
           <span className="f6 fw7">{duration}ms</span>
           {size && <span className="f6 fw7 ml2">{formatBytes(size)}</span>}
         </span>
-        <div className="flex items-center">
+        <div className="flex items-center mv2">
           {html && (
             <Button
               style={{ padding: "3px 6px" }}
@@ -81,7 +95,32 @@ export default function Response({ response }: { response?: PingResponse }) {
           />
         </div>
       </div>
-      {section}
+      <div
+        className="pa2 br2 br--bottom"
+        style={{ backgroundColor: "#fffcff" }}
+      >
+        <div className="flex items-center pb2">
+          <UnstyledButton
+            className={classNames(
+              "response-toggle f6 fw6",
+              showData ? "response-toggle-selected" : null
+            )}
+            onClick={() => setShowData(true)}
+          >
+            Data
+          </UnstyledButton>
+          <UnstyledButton
+            className={classNames(
+              "response-toggle f6 fw6",
+              !showData ? "response-toggle-selected" : null
+            )}
+            onClick={() => setShowData(false)}
+          >
+            Headers
+          </UnstyledButton>
+        </div>
+        {showData ? section : <JsonResponse>{responseHeaders}</JsonResponse>}
+      </div>
     </Wrapper>
   );
 }
@@ -98,23 +137,8 @@ type WrapperProps = {
   children: React.ReactNode;
 };
 
-function ResponseContentWrapper({ children }: WrapperProps) {
-  return (
-    <div
-      className="pa2 br2 br--bottom bt b--moon-gray"
-      style={{ backgroundColor: "#fffcff" }}
-    >
-      {children}
-    </div>
-  );
-}
-
 function TextResponse({ children }: WrapperProps) {
-  return (
-    <ResponseContentWrapper>
-      <p>{children ? children : "The response was empty."}</p>
-    </ResponseContentWrapper>
-  );
+  return <p>{children ? children : "The response was empty."}</p>;
 }
 
 function HtmlResponse({
@@ -126,40 +150,40 @@ function HtmlResponse({
   html: string;
   showIframe: boolean;
 }) {
-  return (
-    <ResponseContentWrapper>
-      {showIframe ? (
-        <iframe
-          title="HTML display"
-          src={url}
-          sandbox="allow-scripts allow-popups"
-          referrerPolicy="no-referrer"
-          width="100%"
-          height="100%"
-          className="mv2"
-          style={{ minHeight: "45vh", border: "none" }}
-        />
-      ) : (
-        <p>{html.trim()}</p>
-      )}
-    </ResponseContentWrapper>
+  return showIframe ? (
+    <iframe
+      title="HTML display"
+      src={url}
+      sandbox="allow-scripts allow-popups"
+      referrerPolicy="no-referrer"
+      width="100%"
+      height="100%"
+      className="mv2"
+      style={{ minHeight: "45vh", border: "none" }}
+    />
+  ) : (
+    <SyntaxHighlighter
+      children={html.trim()}
+      language="html"
+      customStyle={{
+        background: "none",
+        backgroundColor: "transparent",
+        padding: 0,
+        margin: 0,
+      }}
+      className="html-tree monospace"
+    />
   );
 }
 
 function JsonResponse({ children }: { children: object }) {
-  return (
-    <ResponseContentWrapper>
-      <JsonTree className="mv2">{children}</JsonTree>
-    </ResponseContentWrapper>
-  );
+  return <JsonTree className="mv2">{children}</JsonTree>;
 }
 
 function ImgResponse({ url }: { url: string }) {
   return (
-    <ResponseContentWrapper>
-      <div className="flex justify-center pv2">
-        <img src={url} alt="" />
-      </div>
-    </ResponseContentWrapper>
+    <div className="flex justify-center pv2">
+      <img src={url} alt="" />
+    </div>
   );
 }

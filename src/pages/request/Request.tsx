@@ -119,7 +119,7 @@ function RequestUi() {
       </div>
       <Button
         className="mr2"
-        style={{ width: "fit-content" }}
+        style={{ width: "fit-content", whiteSpace: "nowrap" }}
         size="small"
         variant="secondary"
         onClick={() => setShowParams(!showParams)}
@@ -178,12 +178,15 @@ function RequestUi() {
                     >
                       Delete
                     </Button>
-                    <span className="monospace f5">
+                    <span
+                      className="monospace f5"
+                      style={{ overflowWrap: "break-word" }}
+                    >
                       {argKey} : {argValue}
                     </span>
                   </div>
                 ))}
-                <div className="flex items-center mv1">
+                <div className="flex items-center flex-wrap mv1">
                   <Input
                     placeholder="key"
                     value={newArgKey}
@@ -193,9 +196,10 @@ function RequestUi() {
                         [key]: [e.target.value, newArgValue],
                       })
                     }
+                    className="mv1 mobile-w-100"
                     onKeyUp={onEnter}
                   />
-                  <span className="mh2">:</span>
+                  <span className="mh2 desktop">:</span>
                   <Input
                     placeholder="value"
                     value={newArgValue}
@@ -205,6 +209,7 @@ function RequestUi() {
                         [key]: [newArgKey, e.target.value],
                       })
                     }
+                    className="mv1 mobile-w-100"
                     onKeyUp={onEnter}
                   />
                 </div>

@@ -7,6 +7,9 @@
 }
 
 @media only screen and (max-width: 768px) {
+  .mobile-w-100 {
+    width: 100%;
+  }
   .mobile {
     display: block;
   }

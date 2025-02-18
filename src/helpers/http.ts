@@ -37,6 +37,7 @@ export type PingResponse = {
   duration?: number;
   type: "error" | "text" | "json" | "html" | "img";
   size?: number;
+  responseHeaders?: Record<string, any>;
 };
 
 async function httpRequest(config: RequestConfig): Promise<PingResponse> {
@@ -73,8 +74,9 @@ async function httpRequest(config: RequestConfig): Promise<PingResponse> {
   }
 
   const { status: statusCode, data } = response;
+  const responseHeaders = response.headers;
 
-  let size = response.headers["content-length"];
+  let size = responseHeaders["content-length"];
   size = size ? (size as number) : undefined;
 
   const pingResponse = {
@@ -84,9 +86,10 @@ async function httpRequest(config: RequestConfig): Promise<PingResponse> {
     duration,
     text: "",
     size,
+    responseHeaders,
   };
 
-  const contentType = response.headers["content-type"];
+  const contentType = responseHeaders["content-type"];
   if (contentType && contentType.startsWith("image/")) {
     return { ...pingResponse, text: url, type: "img" };
   }
