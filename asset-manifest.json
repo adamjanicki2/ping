@@ -1,12 +1,12 @@
 {
   "files": {
     "main.css": "/ping/static/css/main.90ddca4c.css",
-    "main.js": "/ping/static/js/main.dde2eaf6.js",
+    "main.js": "/ping/static/js/main.1f917a3e.js",
     "index.html": "/ping/index.html",
     "static/media/logo.svg": "/ping/static/media/logo.9c86b09d1365fc5cbdc4a7f8e3ca67a2.svg"
   },
   "entrypoints": [
     "static/css/main.90ddca4c.css",
-    "static/js/main.dde2eaf6.js"
+    "static/js/main.1f917a3e.js"
   ]
 }
