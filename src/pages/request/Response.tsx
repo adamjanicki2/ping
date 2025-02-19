@@ -82,7 +82,10 @@ export default function Response({ response }: { response?: PingResponse }) {
               style={{ padding: "3px 6px" }}
               className="f6 fw6 mr2"
               variant="secondary"
-              onClick={() => setShowIframe(!showIframe)}
+              onClick={() => {
+                setShowIframe(!showIframe);
+                setShowData(true);
+              }}
             >
               {showIframe ? "Show raw HTML" : "Show preview"}
             </Button>

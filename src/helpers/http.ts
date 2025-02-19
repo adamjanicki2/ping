@@ -1,8 +1,10 @@
 import axios, { AxiosResponse } from "axios";
 import isHtml from "is-html";
+import prettier from "prettier";
+import * as plugin from "prettier/plugins/html";
 
 export const HTTP_METHODS = ["GET", "POST"] as const;
-export type HttpMethod = typeof HTTP_METHODS[number];
+export type HttpMethod = (typeof HTTP_METHODS)[number];
 
 export type RequestArgs = {
   params?: Record<string, any>;
@@ -100,8 +102,22 @@ async function httpRequest(config: RequestConfig): Promise<PingResponse> {
   }
 
   if (isHtml(pingResponse.text)) {
-    return { ...pingResponse, html: pingResponse.text, type: "html" };
+    const html = await prettifyHtml(pingResponse.text);
+    return { ...pingResponse, html, type: "html" };
   }
 
   return { ...pingResponse, type: "text" };
+}
+
+async function prettifyHtml(html: string): Promise<string> {
+  try {
+    const formatted = await prettier.format(html, {
+      parser: "html",
+      plugins: [plugin],
+    });
+
+    return formatted;
+  } catch {
+    return html;
+  }
 }

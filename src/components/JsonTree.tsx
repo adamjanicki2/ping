@@ -144,7 +144,6 @@ function Primitive({ children: data }: { children: PrimitiveType }) {
   );
 }
 
-// eslint-disable-next-line no-useless-escape
-const urlRegex =
+const urlRegex = // eslint-disable-next-line
   /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
 const isValidUrl = (str: string) => urlRegex.test(str);
