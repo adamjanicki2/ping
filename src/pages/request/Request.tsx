@@ -73,7 +73,7 @@ function RequestUi() {
   const func = methodToFunc[method];
 
   useEffect(() => {
-    if (originalUrl) {
+    if (originalUrl?.trim()) {
       func({ ...args, url: originalUrl }).then(setResponse);
     }
     // eslint-disable-next-line
@@ -98,7 +98,10 @@ function RequestUi() {
           options={[...HTTP_METHODS]}
           aria-label="method"
           value={method}
-          onChange={(e) => setMethod(e.target.value as HttpMethod)}
+          onChange={(e) => {
+            setMethod(e.target.value as HttpMethod);
+            setSearchParams({});
+          }}
           style={{ width: "max-content" }}
         />
         <Input
