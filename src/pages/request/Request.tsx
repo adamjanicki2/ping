@@ -9,7 +9,6 @@ import {
   RequestArgs,
   PingResponse,
 } from "src/helpers/http";
-import useCache from "src/hooks/useCache";
 import Accordion from "src/components/Accordion";
 import Response from "src/pages/request/Response";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +16,7 @@ import {
   faChevronDown,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
+import { useSearchParams } from "react-router";
 
 const methodToFunc = {
   GET: get,
@@ -43,11 +43,11 @@ export default function Request() {
 }
 
 function RequestUi() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const originalUrl = searchParams.get("target");
   const [showParams, setShowParams] = useState(false);
   const [method, setMethod] = useState<HttpMethod>("GET");
-  const { cache, setCache } = useCache();
-  const cachedUrl = cache[method] || "";
-  const [url, setUrl] = useState(cachedUrl);
+  const [url, setUrl] = useState(originalUrl || "");
   const [response, setResponse] = useState<PingResponse>();
   const reqArgs = additionalInputs[method];
   const [args, setArgs] = useState<RequestArgs>({
@@ -72,11 +72,16 @@ function RequestUi() {
 
   const func = methodToFunc[method];
 
+  useEffect(() => {
+    if (originalUrl) {
+      func({ ...args, url: originalUrl }).then(setResponse);
+    }
+    // eslint-disable-next-line
+  }, [originalUrl]);
+
   const doRequest = async () => {
     if (!url.trim()) return;
-    const response = await func({ ...args, url });
-    setResponse(response);
-    setCache(method, url);
+    setSearchParams((prev) => ({ ...prev, target: url }));
   };
 
   const memoizedResponse = useMemo(

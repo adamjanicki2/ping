@@ -44,7 +44,12 @@ export default function Response({ response }: { response?: PingResponse }) {
         <div className="flex items-center pa2 bg-light-gray">
           <Badge type="error">Unknown error</Badge>
         </div>
-        <TextResponse>{error.toString()}</TextResponse>
+        <div
+          className="pa2 br2 br--bottom"
+          style={{ backgroundColor: "#fffcff" }}
+        >
+          <TextResponse>{error.toString()}</TextResponse>
+        </div>
       </Wrapper>
     );
   }

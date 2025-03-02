@@ -39,9 +39,9 @@ const Nav = () => {
         className="flex items-center desktop link-container ma0"
         style={{ display: open ? "flex" : undefined }}
       >
-        <Navlink to="/request/">Request</Navlink>
-        <Navlink to="/about/">About</Navlink>
-        <Navlink to="/status-codes/">Status Codes</Navlink>
+        <Navlink to="/request">Request</Navlink>
+        <Navlink to="/about">About</Navlink>
+        <Navlink to="/status-codes">Status Codes</Navlink>
       </ul>
     </nav>
   );
