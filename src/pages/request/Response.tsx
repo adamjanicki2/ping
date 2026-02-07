@@ -1,14 +1,21 @@
-import { Badge, Button, UnstyledButton } from "@adamjanicki/ui";
-import { assertDefined, classNames } from "@adamjanicki/ui/functions";
+import "src/pages/request/response.css";
+
+import {
+  Badge,
+  Box,
+  Button,
+  ui,
+  UnstyledButton,
+  UnstyledLink,
+} from "@adamjanicki/ui";
+import { classNames } from "@adamjanicki/ui/functions";
 import { useState } from "react";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import JsonTree from "src/components/JsonTree";
-import { UnstyledLink } from "src/components/Link";
 import { classifyCode, getBadgeType } from "src/helpers/codes";
 import { PingResponse } from "src/helpers/http";
 import CopyButton from "src/pages/CopyButton";
 import { formatBytes } from "src/util";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import "src/pages/request/response.css";
 
 export default function Response({ response }: { response?: PingResponse }) {
   const [showIframe, setShowIframe] = useState(true);
@@ -17,12 +24,17 @@ export default function Response({ response }: { response?: PingResponse }) {
   if (!response) return null;
 
   const Wrapper = ({ children }: { children: React.ReactNode }) => (
-    <div
+    <Box
       id="response"
-      className="flex flex-column w-100 mt3 br2 ba b--moon-gray"
+      vfx={{ axis: "y", width: "full", marginTop: "m" }}
+      style={{
+        border: "1px solid #d6d6d6",
+        borderRadius: 8,
+        overflow: "hidden",
+      }}
     >
       {children}
-    </div>
+    </Box>
   );
 
   let {
@@ -41,15 +53,15 @@ export default function Response({ response }: { response?: PingResponse }) {
   if (error) {
     return (
       <Wrapper>
-        <div className="flex items-center pa2 bg-light-gray">
-          <Badge type="error">Unknown error</Badge>
-        </div>
-        <div
-          className="pa2 br2 br--bottom"
-          style={{ backgroundColor: "#fffcff" }}
+        <Box
+          vfx={{ axis: "x", align: "center", padding: "s" }}
+          style={{ backgroundColor: "#f1f1f1" }}
         >
+          <Badge type="error">Unknown error</Badge>
+        </Box>
+        <Box vfx={{ padding: "s" }} style={{ backgroundColor: "#fffcff" }}>
           <TextResponse>{error.toString()}</TextResponse>
-        </div>
+        </Box>
       </Wrapper>
     );
   }
@@ -68,24 +80,43 @@ export default function Response({ response }: { response?: PingResponse }) {
 
   return (
     <Wrapper>
-      <div className="flex items-center justify-between pa2 bg-light-gray br2 br--top flex-wrap bb b--moon-gray">
-        <span className="flex items-center">
+      <Box
+        vfx={{
+          axis: "x",
+          align: "center",
+          justify: "between",
+          padding: "s",
+          wrap: true,
+        }}
+        style={{
+          backgroundColor: "#f1f1f1",
+          borderBottom: "1px solid #d6d6d6",
+        }}
+      >
+        <Box vfx={{ axis: "x", align: "center", wrap: true }}>
           <UnstyledLink to={`/status-codes#${statusCode}`}>
             <Badge type={getBadgeType(info.type)}>
               {statusCode} {info.name}
             </Badge>
           </UnstyledLink>
-          <span className="fw7 mh2" style={{ color: "#055437" }}>
+          <ui.span
+            vfx={{ fontWeight: 7, marginLeft: "s", marginRight: "s" }}
+            style={{ color: "#055437" }}
+          >
             {typeToLabel[type]}
-          </span>
-          <span className="f6 fw7">{duration}ms</span>
-          {size && <span className="f6 fw7 ml2">{formatBytes(size)}</span>}
-        </span>
-        <div className="flex items-center mv2">
+          </ui.span>
+          <ui.span vfx={{ fontSize: "s", fontWeight: 7 }}>{duration}ms</ui.span>
+          {size && (
+            <ui.span vfx={{ fontSize: "s", fontWeight: 7, marginLeft: "s" }}>
+              {formatBytes(size)}
+            </ui.span>
+          )}
+        </Box>
+        <Box vfx={{ axis: "x", align: "center", marginY: "xs" }}>
           {html && (
             <Button
               style={{ padding: "3px 6px" }}
-              className="f6 fw6 mr2"
+              vfx={{ fontSize: "s", fontWeight: 6, marginRight: "s" }}
               variant="secondary"
               onClick={() => {
                 setShowIframe(!showIframe);
@@ -101,36 +132,39 @@ export default function Response({ response }: { response?: PingResponse }) {
               json ? "JSON" : html ? "HTML" : type === "img" ? "URL" : "text"
             }
           />
-        </div>
-      </div>
-      <div
-        className="pa2 br2 br--bottom"
-        style={{ backgroundColor: "#fffcff" }}
-      >
-        <div className="flex items-center pb2">
+        </Box>
+      </Box>
+      <Box vfx={{ padding: "s" }} style={{ backgroundColor: "#fffcff" }}>
+        <Box vfx={{ axis: "x", align: "center", paddingBottom: "s" }}>
           <UnstyledButton
             className={classNames(
-              "response-toggle f6 fw6",
-              showData ? "response-toggle-selected" : null
+              "response-toggle",
+              showData ? "response-toggle-selected" : null,
             )}
+            vfx={{ fontSize: "s", fontWeight: 6 }}
             onClick={() => setShowData(true)}
           >
             Data
           </UnstyledButton>
           <UnstyledButton
             className={classNames(
-              "response-toggle f6 fw6",
-              !showData ? "response-toggle-selected" : null
+              "response-toggle",
+              !showData ? "response-toggle-selected" : null,
             )}
+            vfx={{ fontSize: "s", fontWeight: 6 }}
             onClick={() => setShowData(false)}
           >
             Headers
           </UnstyledButton>
-        </div>
+        </Box>
         {showData ? section : <JsonResponse>{responseHeaders}</JsonResponse>}
-      </div>
+      </Box>
     </Wrapper>
   );
+}
+
+function assertDefined<T>(value: T | undefined): T {
+  return value as T;
 }
 
 const typeToLabel = {
@@ -146,7 +180,11 @@ type WrapperProps = {
 };
 
 function TextResponse({ children }: WrapperProps) {
-  return <p>{children ? children : "The response was empty."}</p>;
+  return (
+    <ui.p vfx={{ margin: "none" }}>
+      {children ? children : "The response was empty."}
+    </ui.p>
+  );
 }
 
 function HtmlResponse({
@@ -166,8 +204,12 @@ function HtmlResponse({
       referrerPolicy="no-referrer"
       width="100%"
       height="100%"
-      className="mv2"
-      style={{ minHeight: "45vh", border: "none" }}
+      style={{
+        minHeight: "45vh",
+        border: "none",
+        marginTop: 8,
+        marginBottom: 8,
+      }}
     />
   ) : (
     <SyntaxHighlighter
@@ -185,13 +227,17 @@ function HtmlResponse({
 }
 
 function JsonResponse({ children }: { children: object }) {
-  return <JsonTree className="mv2">{children}</JsonTree>;
+  return (
+    <Box vfx={{ marginY: "s" }}>
+      <JsonTree>{children}</JsonTree>
+    </Box>
+  );
 }
 
 function ImgResponse({ url }: { url: string }) {
   return (
-    <div className="flex justify-center pv2">
+    <Box vfx={{ axis: "x", justify: "center", paddingY: "s" }}>
       <img src={url} alt="" />
-    </div>
+    </Box>
   );
 }

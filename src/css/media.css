@@ -19,6 +19,9 @@
   .request-container {
     width: 100%;
   }
+  .about-content {
+    width: 100%;
+  }
   .input-container {
     flex-direction: column;
   }

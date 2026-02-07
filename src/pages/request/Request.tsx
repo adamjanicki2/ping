@@ -1,22 +1,26 @@
-import { Animated, Button, Input, Select } from "@adamjanicki/ui";
+import {
+  Animated,
+  Box,
+  Button,
+  Icon,
+  Input,
+  Select,
+  ui,
+  useSearchParams,
+} from "@adamjanicki/ui";
+import { chevronDown, chevronRight } from "@adamjanicki/ui/icons";
 import { useEffect, useMemo, useState } from "react";
+import Accordion from "src/components/Accordion";
 import PageWrapper from "src/components/PageWrapper";
 import {
-  type HttpMethod,
   get,
-  post,
   HTTP_METHODS,
-  RequestArgs,
+  type HttpMethod,
   PingResponse,
+  post,
+  RequestArgs,
 } from "src/helpers/http";
-import Accordion from "src/components/Accordion";
 import Response from "src/pages/request/Response";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronDown,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
-import { useSearchParams } from "react-router";
 
 const methodToFunc = {
   GET: get,
@@ -44,7 +48,7 @@ export default function Request() {
 
 function RequestUi() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const originalUrl = searchParams.get("target");
+  const originalUrl = searchParams.target as string;
   const [showParams, setShowParams] = useState(false);
   const [method, setMethod] = useState<HttpMethod>("GET");
   const [url, setUrl] = useState(originalUrl || "");
@@ -57,16 +61,16 @@ function RequestUi() {
     Record<keyof RequestArgs, [string, string]>
   >(
     Object.fromEntries(
-      Object.keys(reqArgs).map((key) => [key as any, ["", ""]])
-    )
+      Object.keys(reqArgs).map((key) => [key as any, ["", ""]]),
+    ),
   );
 
   useEffect(() => {
     setArgs({ ...reqArgs });
     setNewArgs(
       Object.fromEntries(
-        Object.keys(reqArgs).map((key) => [key as any, ["", ""]])
-      )
+        Object.keys(reqArgs).map((key) => [key as any, ["", ""]]),
+      ),
     );
   }, [method, reqArgs]);
 
@@ -87,26 +91,34 @@ function RequestUi() {
   const memoizedResponse = useMemo(
     () => <Response response={response} />,
     // eslint-disable-next-line
-    [response?.id]
+    [response?.id],
   );
 
   return (
-    <div className="flex flex-column ph4 request-container">
-      <div className="flex flex-wrap justify-center items-center mb3">
+    <Box className="request-container" vfx={{ axis: "y", paddingX: "l" }}>
+      <Box
+        vfx={{
+          axis: "x",
+          wrap: true,
+          justify: "center",
+          align: "center",
+          marginBottom: "m",
+        }}
+      >
         <Select
-          className="bg-white mt2"
+          style={{ backgroundColor: "white", width: "max-content" }}
+          vfx={{ marginTop: "s" }}
           options={[...HTTP_METHODS]}
           aria-label="method"
           value={method}
-          onChange={(e) => {
-            setMethod(e.target.value as HttpMethod);
+          onSelect={(value) => {
+            setMethod(value);
             setSearchParams({});
           }}
-          style={{ width: "max-content" }}
         />
         <Input
           style={{ flexGrow: 1 }}
-          className="mh2 mt2"
+          vfx={{ marginLeft: "s", marginRight: "s", marginTop: "s" }}
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="URL"
@@ -119,27 +131,27 @@ function RequestUi() {
         <Button
           onClick={doRequest}
           disabled={!url.trim()}
-          className="mt2"
+          vfx={{ marginTop: "s" }}
           style={{ padding: "12px 16px", whiteSpace: "nowrap" }}
         >
           Send it
         </Button>
-      </div>
+      </Box>
       <Button
-        className="mr2"
+        vfx={{ marginRight: "s" }}
         style={{ width: "fit-content", whiteSpace: "nowrap" }}
         size="small"
         variant="secondary"
         onClick={() => setShowParams(!showParams)}
       >
-        <FontAwesomeIcon icon={showParams ? faChevronDown : faChevronRight} />{" "}
+        <Icon icon={showParams ? chevronDown : chevronRight} />
         {showParams ? "Hide config" : "Show config"}
       </Button>
       <Animated
         visible={showParams}
-        className="w-100"
-        enter={{ style: { opacity: 1 } }}
-        exit={{ style: { opacity: 0 } }}
+        style={{ width: "100%" }}
+        to={{ opacity: 1 }}
+        from={{ opacity: 0 }}
       >
         {Object.entries(args).map(([key, value], i) => {
           const [newArgKey, newArgValue] = newArgs[key as keyof RequestArgs];
@@ -167,11 +179,11 @@ function RequestUi() {
               label={labels[key as keyof typeof labels]}
               divider
             >
-              <div className="mb3">
+              <Box vfx={{ marginBottom: "m" }}>
                 {Object.entries(value).map(([argKey, argValue], j) => (
-                  <div className="mv1" key={j}>
+                  <Box vfx={{ marginY: "xs" }} key={j}>
                     <Button
-                      className="mr2"
+                      vfx={{ marginRight: "s" }}
                       size="small"
                       variant="secondary"
                       onClick={() =>
@@ -186,15 +198,23 @@ function RequestUi() {
                     >
                       Delete
                     </Button>
-                    <span
-                      className="monospace f5"
+                    <ui.span
+                      className="monospace"
+                      vfx={{ fontSize: "s" }}
                       style={{ overflowWrap: "break-word" }}
                     >
                       {argKey} : {argValue}
-                    </span>
-                  </div>
+                    </ui.span>
+                  </Box>
                 ))}
-                <div className="flex items-center flex-wrap mv1">
+                <Box
+                  vfx={{
+                    axis: "x",
+                    align: "center",
+                    wrap: true,
+                    marginY: "xs",
+                  }}
+                >
                   <Input
                     placeholder="key"
                     value={newArgKey}
@@ -204,10 +224,16 @@ function RequestUi() {
                         [key]: [e.target.value, newArgValue],
                       })
                     }
-                    className="mv1 mobile-w-100"
+                    className="mobile-w-100"
+                    vfx={{ marginY: "xs" }}
                     onKeyUp={onEnter}
                   />
-                  <span className="mh2 desktop">:</span>
+                  <ui.span
+                    className="desktop"
+                    vfx={{ marginLeft: "s", marginRight: "s" }}
+                  >
+                    :
+                  </ui.span>
                   <Input
                     placeholder="value"
                     value={newArgValue}
@@ -217,23 +243,24 @@ function RequestUi() {
                         [key]: [newArgKey, e.target.value],
                       })
                     }
-                    className="mv1 mobile-w-100"
+                    className="mobile-w-100"
+                    vfx={{ marginY: "xs" }}
                     onKeyUp={onEnter}
                   />
-                </div>
+                </Box>
                 <Button
-                  className="mt1"
                   disabled={!newArgKey || !newArgValue}
                   onClick={handleAdd}
+                  vfx={{ marginTop: "xs" }}
                 >
                   Add
                 </Button>
-              </div>
+              </Box>
             </Accordion>
           );
         })}
       </Animated>
       {memoizedResponse}
-    </div>
+    </Box>
   );
 }

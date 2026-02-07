@@ -53,6 +53,10 @@ input {
   font-size: 1.25rem;
 }
 
+.about-content {
+  width: 70%;
+}
+
 .spinning {
   animation: spin 25s linear infinite;
   transform-origin: center;

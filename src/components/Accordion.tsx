@@ -1,10 +1,6 @@
+import { Animated, Box, Icon, UnstyledButton } from "@adamjanicki/ui";
+import { chevronDown, chevronRight } from "@adamjanicki/ui/icons";
 import React, { useState } from "react";
-import { Animated, UnstyledButton } from "@adamjanicki/ui";
-import {
-  faChevronDown,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type Props = {
   divider?: boolean;
@@ -22,26 +18,32 @@ export default function Accordion({
   const [show, setShow] = useState(false);
 
   return (
-    <div className={className}>
-      <UnstyledButton onClick={() => setShow(!show)} className="w-100 flex pa2">
-        <FontAwesomeIcon
-          style={{ marginRight: show ? 4 : 10 }}
-          icon={show ? faChevronDown : faChevronRight}
-        />{" "}
-        {label}
+    <Box className={className}>
+      <UnstyledButton
+        onClick={() => setShow(!show)}
+        vfx={{ axis: "x", align: "center", width: "full", padding: "s" }}
+      >
+        <Icon icon={show ? chevronDown : chevronRight} /> {label}
       </UnstyledButton>
       <Animated
-        className="w-100 ph2"
+        style={{ width: "100%", paddingLeft: 8, paddingRight: 8 }}
         visible={show}
-        enter={{ style: { opacity: 1 } }}
-        exit={{ style: { opacity: 0 } }}
+        to={{ opacity: 1 }}
+        from={{ opacity: 0 }}
       >
         {children}
       </Animated>
-      <hr
-        className="ma0 w-100 bg-moon-gray"
-        style={{ border: "none", height: 1 }}
-      />
-    </div>
+      {divider && (
+        <hr
+          style={{
+            border: "none",
+            height: 1,
+            width: "100%",
+            margin: 0,
+            backgroundColor: "#ddd",
+          }}
+        />
+      )}
+    </Box>
   );
 }

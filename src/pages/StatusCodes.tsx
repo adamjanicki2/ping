@@ -1,7 +1,8 @@
+import { Box, ui } from "@adamjanicki/ui";
 import React from "react";
 import Heading from "src/components/Heading";
 import PageWrapper from "src/components/PageWrapper";
-import { statusCodes, type StatusCodeEntry } from "src/helpers/codes";
+import { type StatusCodeEntry,statusCodes } from "src/helpers/codes";
 
 const displayNames = {
   info: "Informational",
@@ -25,7 +26,7 @@ const statusCodeGroups: [string, [string, StatusCodeEntry][]][] = [
 export default function StatusCodes() {
   return (
     <PageWrapper title="Status Codes">
-      <div className="ph4">
+      <Box vfx={{ width: "full", paddingX: "l" }}>
         {statusCodeGroups.map(([type, entries], i) => (
           <React.Fragment key={i}>
             <Heading level={1} id={type}>
@@ -40,7 +41,7 @@ export default function StatusCodes() {
             ))}
           </React.Fragment>
         ))}
-      </div>
+      </Box>
     </PageWrapper>
   );
 }
@@ -54,7 +55,7 @@ function StatusCodeItem({ statusCodeEntry, code }: Props) {
   return (
     <>
       <Heading level={2} id={`${code}`}>{`${code} - ${name}`}</Heading>
-      <p className="">{description}</p>
+      <ui.p vfx={{ margin: "none", marginBottom: "s" }}>{description}</ui.p>
     </>
   );
 }

@@ -1,5 +1,3 @@
-import { ContentType } from "@adamjanicki/ui/types";
-
 export type HttpCodeType =
   | "info"
   | "success"
@@ -389,7 +387,7 @@ export function classifyCode(code: number): StatusCodeEntry {
   );
 }
 
-export function getBadgeType(type: HttpCodeType): ContentType {
+export function getBadgeType(type: HttpCodeType) {
   switch (type) {
     case "client-error":
     case "server-error":

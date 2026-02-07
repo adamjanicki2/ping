@@ -1,3 +1,6 @@
+import { ui } from "@adamjanicki/ui";
+import Box from "@adamjanicki/ui/components/Box/Box";
+import { classNames } from "@adamjanicki/ui/functions";
 import { useDocumentTitle } from "src/hooks";
 import type { Children } from "src/types";
 
@@ -17,13 +20,19 @@ const PageWrapper = ({
   useDocumentTitle(`${documentTitle ?? title} | Ping`);
 
   return (
-    <div
-      className="flex flex-column items-center w-100 pb3"
+    <Box
+      vfx={{ axis: "y", align: "center", width: "full", paddingBottom: "xl" }}
       style={{ minHeight: "70vh" }}
     >
-      <h1 className={`page-title-text tc ${titleClass}`}>{title}</h1>
+      <ui.h1
+        vfx={{ textAlign: "center" }}
+        className={classNames("page-title-text", titleClass)}
+        style={{ whiteSpace: "wrap", wordBreak: "break-word" }}
+      >
+        {title}
+      </ui.h1>
       {children}
-    </div>
+    </Box>
   );
 };
 

@@ -1,9 +1,15 @@
-import { useEffect, useState } from "react";
-import { TripleFade as Hamburger } from "@adamjanicki/ui";
 import "src/components/nav.css";
-import Link, { UnstyledLink } from "src/components/Link";
-import { useLocation } from "react-router";
-import { ReactComponent as Logo } from "src/img/logo.svg";
+
+import {
+  Box,
+  Link,
+  TripleFade as Hamburger,
+  ui,
+  UnstyledLink,
+  useLocation,
+} from "@adamjanicki/ui";
+import { useEffect, useState } from "react";
+import Logo from "src/img/logo.svg?react";
 
 type NavlinkProps = {
   to: string;
@@ -26,24 +32,36 @@ const Nav = () => {
   );
 
   return (
-    <nav className="flex items-center justify-between w-100 nav pv2 ph4">
-      <div className="flex items-center justify-between bar-container">
-        <UnstyledLink className="nav-title flex items-center" to="/">
+    <ui.nav
+      className="nav"
+      vfx={{ axis: "x", align: "center", justify: "between", paddingY: "s" }}
+      style={{ paddingLeft: 24, paddingRight: 24 }}
+    >
+      <Box
+        vfx={{ axis: "x", align: "center", justify: "between", width: "full" }}
+        className="bar-container"
+      >
+        <UnstyledLink
+          className="nav-title"
+          to="/"
+          vfx={{ axis: "x", align: "center" }}
+        >
           <Logo height="36px" />
         </UnstyledLink>
-        <div className="mobile">
+        <Box className="mobile">
           <Hamburger open={open} onClick={() => setOpen(!open)} />
-        </div>
-      </div>
-      <ul
-        className="flex items-center desktop link-container ma0"
-        style={{ display: open ? "flex" : undefined }}
+        </Box>
+      </Box>
+      <ui.ul
+        className="desktop link-container"
+        vfx={{ axis: "x", align: "center", margin: "none" }}
+        style={open ? { display: "flex" } : undefined}
       >
         <Navlink to="/request">Request</Navlink>
         <Navlink to="/about">About</Navlink>
         <Navlink to="/status-codes">Status Codes</Navlink>
-      </ul>
-    </nav>
+      </ui.ul>
+    </ui.nav>
   );
 };
 

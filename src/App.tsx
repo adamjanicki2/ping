@@ -1,5 +1,4 @@
-import { useScrollToHash } from "@adamjanicki/ui";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { Route, Router, Routes, useScrollToHash } from "@adamjanicki/ui";
 import Footer from "src/components/Footer";
 import Nav from "src/components/Nav";
 import About from "src/pages/About";
@@ -11,18 +10,16 @@ import StatusCodes from "src/pages/StatusCodes";
 const App = () => {
   useScrollToHash();
   return (
-    <BrowserRouter basename="/ping">
+    <Router basename="/ping">
       <Nav />
-      <Routes>
+      <Routes fallback={<NotFound />}>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/request" element={<Request />} />
         <Route path="/status-codes" element={<StatusCodes />} />
-        {/* Make sure this is the last route */}
-        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
-    </BrowserRouter>
+    </Router>
   );
 };
 

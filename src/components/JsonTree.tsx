@@ -1,8 +1,8 @@
-import { UnstyledButton } from "@adamjanicki/ui";
+import "src/components/json.css";
+
+import { UnstyledButton, UnstyledLink } from "@adamjanicki/ui";
 import { classNames } from "@adamjanicki/ui/functions";
 import { useState } from "react";
-import "src/components/json.css";
-import { UnstyledLink } from "src/components/Link";
 
 type Props = {
   children: any;
@@ -108,8 +108,8 @@ type PrimitiveType =
   | boolean
   | number
   | Function
-  | BigInt
-  | Symbol
+  | bigint
+  | symbol
   | null
   | undefined;
 
@@ -122,7 +122,7 @@ function Primitive({ children: data }: { children: PrimitiveType }) {
       node = (
         <>
           "
-          <UnstyledLink target="_blank" rel="noreferrer" to={data as string}>
+          <UnstyledLink newTab to={data as string}>
             {data as string}
           </UnstyledLink>
           "
@@ -144,6 +144,6 @@ function Primitive({ children: data }: { children: PrimitiveType }) {
   );
 }
 
-const urlRegex = // eslint-disable-next-line
+const urlRegex =  
   /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
 const isValidUrl = (str: string) => urlRegex.test(str);

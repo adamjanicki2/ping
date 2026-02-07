@@ -1,7 +1,5 @@
-import { Badge, Button } from "@adamjanicki/ui";
-import { classNames } from "@adamjanicki/ui/functions";
-import { faCheck, faClipboard } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Badge, Button, Icon } from "@adamjanicki/ui";
+import { check, clipboard } from "@adamjanicki/ui/icons";
 import { useState } from "react";
 
 type Props = {
@@ -18,23 +16,19 @@ export default function CopyButton({ text, type, className }: Props) {
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
   };
-
   return copied ? (
-    <Badge
-      className={classNames("flex items-center", className)}
-      type="success"
-    >
-      <FontAwesomeIcon icon={faCheck} className="mr1" /> Copied
+    <Badge vfx={{ axis: "x", align: "center", gap: "xs" }} type="success">
+      <Icon icon={check} /> Copied
     </Badge>
   ) : (
     <Button
+      vfx={{ axis: "x", align: "center", gap: "xs", paddingY: "xxs" }}
       onClick={copyCode}
-      style={{ padding: "3px 6px" }}
-      className={classNames("f6 fw6", className)}
+      size="small"
       variant="secondary"
     >
-      <FontAwesomeIcon icon={faClipboard} className="mr1" />
-      Copy {type}
+      <Icon icon={clipboard} />
+      Copy
     </Button>
   );
 }

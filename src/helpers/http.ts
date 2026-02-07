@@ -35,7 +35,7 @@ export type PingResponse = {
   text?: string;
   statusCode?: number;
   html?: string;
-  json?: Object;
+  json?: object;
   duration?: number;
   type: "error" | "text" | "json" | "html" | "img";
   size?: number;
