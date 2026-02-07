@@ -11,7 +11,7 @@ import {
 import { chevronDown, chevronRight } from "@adamjanicki/ui/icons";
 import { useEffect, useState } from "react";
 import Accordion from "src/components/Accordion";
-import PageWrapper from "src/components/PageWrapper";
+import Page from "src/components/Page";
 import {
   get,
   HTTP_METHODS,
@@ -40,9 +40,9 @@ const additionalInputs: Record<HttpMethod, RequestArgs> = {
 
 export default function Request() {
   return (
-    <PageWrapper title="Request">
+    <Page title="Request">
       <RequestUi />
-    </PageWrapper>
+    </Page>
   );
 }
 

@@ -204,7 +204,7 @@ function HtmlResponse({
   showIframe: boolean;
 }) {
   return showIframe ? (
-    <iframe
+    <ui.iframe
       title="HTML display"
       src={url}
       sandbox="allow-scripts allow-popups"
@@ -244,7 +244,7 @@ function JsonResponse({ children }: { children: object }) {
 function ImgResponse({ url }: { url: string }) {
   return (
     <Box vfx={{ axis: "x", justify: "center", paddingY: "s" }}>
-      <img src={url} alt="" />
+      <ui.img src={url} alt="" />
     </Box>
   );
 }

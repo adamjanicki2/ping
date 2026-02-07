@@ -397,8 +397,7 @@ export function getBadgeType(type: HttpCodeType) {
     case "success":
       return type;
     case "redirect":
-      return "info";
     default:
-      throw new Error();
+      return "info";
   }
 }

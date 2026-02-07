@@ -1,7 +1,7 @@
 import { Box, ui } from "@adamjanicki/ui";
 import React from "react";
 import Heading from "src/components/Heading";
-import PageWrapper from "src/components/PageWrapper";
+import Page from "src/components/Page";
 import { type StatusCodeEntry, statusCodes } from "src/helpers/codes";
 
 const displayNames = {
@@ -25,8 +25,8 @@ const statusCodeGroups: [string, [string, StatusCodeEntry][]][] = [
 
 export default function StatusCodes() {
   return (
-    <PageWrapper title="Status Codes">
-      <Box vfx={{ width: "full", paddingX: "l" }}>
+    <Page title="Status Codes">
+      <Box vfx={{ width: "full", paddingX: "xxl" }}>
         {statusCodeGroups.map(([type, entries], i) => (
           <React.Fragment key={i}>
             <Heading level={1} id={type}>
@@ -42,7 +42,7 @@ export default function StatusCodes() {
           </React.Fragment>
         ))}
       </Box>
-    </PageWrapper>
+    </Page>
   );
 }
 

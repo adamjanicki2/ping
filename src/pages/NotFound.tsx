@@ -1,14 +1,14 @@
 import { Link, ui } from "@adamjanicki/ui";
-import PageWrapper from "src/components/PageWrapper";
+import Page from "src/components/Page";
 
 const NotFound = () => (
-  <PageWrapper title="404">
+  <Page title="404">
     <ui.p vfx={{ textAlign: "center", fontSize: "m", fontWeight: 4 }}>
       Oops! The requested page does not exist.
-      <br />
+      <ui.br />
       Try going <Link to="/">home</Link>.
     </ui.p>
-  </PageWrapper>
+  </Page>
 );
 
 export default NotFound;

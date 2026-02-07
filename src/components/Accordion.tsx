@@ -1,4 +1,4 @@
-import { Animated, Box, Icon, UnstyledButton } from "@adamjanicki/ui";
+import { Animated, Box, Icon, ui, UnstyledButton } from "@adamjanicki/ui";
 import { chevronDown, chevronRight } from "@adamjanicki/ui/icons";
 import React, { useState } from "react";
 
@@ -34,7 +34,7 @@ export default function Accordion({
         {children}
       </Animated>
       {divider && (
-        <hr
+        <ui.hr
           style={{
             border: "none",
             height: 1,
