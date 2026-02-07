@@ -1,4 +1,5 @@
 import {
+  Accordion,
   Animated,
   Box,
   Button,
@@ -10,7 +11,6 @@ import {
 } from "@adamjanicki/ui";
 import { chevronDown, chevronRight } from "@adamjanicki/ui/icons";
 import { useEffect, useState } from "react";
-import Accordion from "src/components/Accordion";
 import Page from "src/components/Page";
 import {
   get,
@@ -54,6 +54,13 @@ function RequestUi() {
   const [url, setUrl] = useState(originalUrl || "");
   const [response, setResponse] = useState<PingResponse>();
   const reqArgs = additionalInputs[method];
+  const [openDrawers, setOpenDrawers] = useState<
+    Record<keyof RequestArgs, boolean>
+  >(
+    Object.fromEntries(
+      Object.keys(reqArgs).map((key) => [key as any, false]),
+    ) as Record<keyof RequestArgs, boolean>,
+  );
   const [args, setArgs] = useState<RequestArgs>({
     ...reqArgs,
   });
@@ -86,6 +93,11 @@ function RequestUi() {
       Object.fromEntries(
         Object.keys(nextReqArgs).map((key) => [key as any, ["", ""]]),
       ),
+    );
+    setOpenDrawers(
+      Object.fromEntries(
+        Object.keys(nextReqArgs).map((key) => [key as any, false]),
+      ) as Record<keyof RequestArgs, boolean>,
     );
   };
 
@@ -149,112 +161,116 @@ function RequestUi() {
         to={{ opacity: 1 }}
         from={{ opacity: 0 }}
       >
-        {Object.entries(args).map(([key, value], i) => {
-          const [newArgKey, newArgValue] = newArgs[key as keyof RequestArgs];
-          const handleAdd = () => {
-            setArgs({
-              ...args,
-              [key]: {
-                ...args[key as keyof RequestArgs],
-                [newArgKey]: newArgValue,
-              },
-            });
-            setNewArgs({
-              ...newArgs,
-              [key]: ["", ""],
-            });
-          };
-          const onEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.key === "Enter" && newArgKey && newArgValue) {
-              handleAdd();
-            }
-          };
-          return (
-            <Accordion
-              key={i}
-              label={labels[key as keyof typeof labels]}
-              divider
-            >
-              <Box vfx={{ marginBottom: "m" }}>
-                {Object.entries(value).map(([argKey, argValue], j) => (
-                  <Box vfx={{ marginY: "xs" }} key={j}>
-                    <Button
-                      vfx={{ marginRight: "s" }}
-                      size="small"
-                      variant="secondary"
-                      onClick={() =>
-                        setArgs((prev) => {
-                          const copy = { ...prev };
-                          delete (copy[key as keyof RequestArgs] as any)[
-                            argKey
-                          ];
-                          return copy;
+        <Accordion
+          drawers={(Object.entries(args) as [
+            keyof RequestArgs,
+            Record<string, string>,
+          ][]).map(([key, value]) => {
+            const [newArgKey, newArgValue] = newArgs[key];
+            const handleAdd = () => {
+              setArgs({
+                ...args,
+                [key]: {
+                  ...args[key],
+                  [newArgKey]: newArgValue,
+                },
+              });
+              setNewArgs({
+                ...newArgs,
+                [key]: ["", ""],
+              });
+            };
+            const onEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+              if (e.key === "Enter" && newArgKey && newArgValue) {
+                handleAdd();
+              }
+            };
+            return {
+              label: labels[key as keyof typeof labels],
+              open: openDrawers[key],
+              onOpenChange: (open) =>
+                setOpenDrawers((prev) => ({ ...prev, [key]: open })),
+              content: (
+                <Box vfx={{ marginBottom: "m" }}>
+                  {Object.entries(value).map(([argKey, argValue], j) => (
+                    <Box vfx={{ marginY: "xs" }} key={j}>
+                      <Button
+                        vfx={{ marginRight: "s" }}
+                        size="small"
+                        variant="secondary"
+                        onClick={() =>
+                          setArgs((prev) => {
+                            const copy = { ...prev };
+                            delete (copy[key] as any)[argKey];
+                            return copy;
+                          })
+                        }
+                      >
+                        Delete
+                      </Button>
+                      <ui.span
+                        className="monospace"
+                        vfx={{ fontSize: "s" }}
+                        style={{ overflowWrap: "break-word" }}
+                      >
+                        {argKey} : {argValue}
+                      </ui.span>
+                    </Box>
+                  ))}
+                  <Box
+                    vfx={{
+                      axis: "x",
+                      align: "center",
+                      wrap: true,
+                      marginY: "xs",
+                    }}
+                  >
+                    <Input
+                      placeholder="key"
+                      value={newArgKey}
+                      onChange={(e) =>
+                        setNewArgs({
+                          ...newArgs,
+                          [key]: [e.target.value, newArgValue],
                         })
                       }
-                    >
-                      Delete
-                    </Button>
+                      className="mobile-w-100"
+                      vfx={{ marginY: "xs" }}
+                      onKeyUp={onEnter}
+                    />
                     <ui.span
-                      className="monospace"
-                      vfx={{ fontSize: "s" }}
-                      style={{ overflowWrap: "break-word" }}
+                      className="desktop"
+                      vfx={{ marginLeft: "s", marginRight: "s" }}
                     >
-                      {argKey} : {argValue}
+                      :
                     </ui.span>
+                    <Input
+                      placeholder="value"
+                      value={newArgValue}
+                      onChange={(e) =>
+                        setNewArgs({
+                          ...newArgs,
+                          [key]: [newArgKey, e.target.value],
+                        })
+                      }
+                      className="mobile-w-100"
+                      vfx={{ marginY: "xs" }}
+                      onKeyUp={onEnter}
+                    />
                   </Box>
-                ))}
-                <Box
-                  vfx={{
-                    axis: "x",
-                    align: "center",
-                    wrap: true,
-                    marginY: "xs",
-                  }}
-                >
-                  <Input
-                    placeholder="key"
-                    value={newArgKey}
-                    onChange={(e) =>
-                      setNewArgs({
-                        ...newArgs,
-                        [key]: [e.target.value, newArgValue],
-                      })
-                    }
-                    className="mobile-w-100"
-                    vfx={{ marginY: "xs" }}
-                    onKeyUp={onEnter}
-                  />
-                  <ui.span
-                    className="desktop"
-                    vfx={{ marginLeft: "s", marginRight: "s" }}
+                  <Button
+                    disabled={!newArgKey || !newArgValue}
+                    onClick={handleAdd}
+                    vfx={{ marginTop: "xs" }}
                   >
-                    :
-                  </ui.span>
-                  <Input
-                    placeholder="value"
-                    value={newArgValue}
-                    onChange={(e) =>
-                      setNewArgs({
-                        ...newArgs,
-                        [key]: [newArgKey, e.target.value],
-                      })
-                    }
-                    className="mobile-w-100"
-                    vfx={{ marginY: "xs" }}
-                    onKeyUp={onEnter}
-                  />
+                    Add
+                  </Button>
                 </Box>
-                <Button
-                  disabled={!newArgKey || !newArgValue}
-                  onClick={handleAdd}
-                  vfx={{ marginTop: "xs" }}
-                >
-                  Add
-                </Button>
-              </Box>
-            </Accordion>
-          );
-        })}
+              ),
+            };
+          })}
+          vfx={{ marginTop: "s" }}
+        />
       </Animated>
       <Response response={response} />
     </Box>
