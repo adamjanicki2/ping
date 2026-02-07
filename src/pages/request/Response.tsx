@@ -23,16 +23,16 @@ export default function Response({ response }: { response?: PingResponse }) {
   if (!response) return null;
 
   const {
-    statusCode,
-    text,
+    statusCode = 0,
+    text = "",
     json,
     html,
-    duration,
+    duration = 0,
     error,
     url,
     type,
     size,
-    responseHeaders,
+    responseHeaders = {},
   } = response;
 
   if (error) {
@@ -55,17 +55,20 @@ export default function Response({ response }: { response?: PingResponse }) {
     );
   }
 
-  const definedStatusCode = assertDefined(statusCode);
-  const definedDuration = assertDefined(duration);
-  const definedText = assertDefined(text);
-  const definedResponseHeaders = assertDefined(responseHeaders);
-  const info = classifyCode(definedStatusCode);
-
-  let section = <TextResponse>{definedText}</TextResponse>;
-  if (json) section = <JsonTree>{json}</JsonTree>;
-  else if (html)
-    section = <HtmlResponse showIframe={showIframe} url={url} html={html} />;
-  else if (type === "img") section = <ImgResponse url={url} />;
+  const info = classifyCode(statusCode);
+  const section = json ? (
+    <JsonTree>{json}</JsonTree>
+  ) : html ? (
+    <HtmlResponse showIframe={showIframe} url={url} html={html} />
+  ) : type === "img" ? (
+    <ImgResponse url={url} />
+  ) : (
+    <TextResponse>{text}</TextResponse>
+  );
+  const toggleOptions = [
+    { label: "Data", value: true },
+    { label: "Headers", value: false },
+  ] as const;
 
   return (
     <Wrapper>
@@ -81,16 +84,16 @@ export default function Response({ response }: { response?: PingResponse }) {
         }}
       >
         <Box vfx={{ axis: "x", align: "center", gap: "s", wrap: true }}>
-          <UnstyledLink to={`/status-codes#${definedStatusCode}`}>
+          <UnstyledLink to={`/status-codes#${statusCode}`}>
             <Badge type={getBadgeType(info.type)}>
-              {definedStatusCode} {info.name}
+              {statusCode} {info.name}
             </Badge>
           </UnstyledLink>
           <ui.span vfx={{ fontWeight: 7 }} style={{ color: "#055437" }}>
             {typeToLabel[type]}
           </ui.span>
           <ui.span vfx={{ fontSize: "s", fontWeight: 7 }}>
-            {definedDuration}ms
+            {duration}ms
           </ui.span>
           {size && (
             <ui.span vfx={{ fontSize: "s", fontWeight: 7 }}>
@@ -116,34 +119,27 @@ export default function Response({ response }: { response?: PingResponse }) {
               json ? "JSON" : html ? "HTML" : type === "img" ? "URL" : "text"
             }
           >
-            {definedText || url}
+            {text || url}
           </CopyButton>
         </Box>
       </Box>
       <Box vfx={{ padding: "s", backgroundColor: "default" }}>
         <Box vfx={{ axis: "x", align: "center", paddingBottom: "s" }}>
-          <UnstyledButton
-            className={classNames(
-              "response-toggle",
-              showData ? "response-toggle-selected" : null,
-            )}
-            vfx={{ fontSize: "s", fontWeight: 6 }}
-            onClick={() => setShowData(true)}
-          >
-            Data
-          </UnstyledButton>
-          <UnstyledButton
-            className={classNames(
-              "response-toggle",
-              !showData ? "response-toggle-selected" : null,
-            )}
-            vfx={{ fontSize: "s", fontWeight: 6 }}
-            onClick={() => setShowData(false)}
-          >
-            Headers
-          </UnstyledButton>
+          {toggleOptions.map((toggle) => (
+            <UnstyledButton
+              key={toggle.label}
+              className={classNames(
+                "response-toggle",
+                showData === toggle.value ? "response-toggle-selected" : null,
+              )}
+              vfx={{ fontSize: "s", fontWeight: 6 }}
+              onClick={() => setShowData(toggle.value)}
+            >
+              {toggle.label}
+            </UnstyledButton>
+          ))}
         </Box>
-        {showData ? section : <JsonTree>{definedResponseHeaders}</JsonTree>}
+        {showData ? section : <JsonTree>{responseHeaders}</JsonTree>}
       </Box>
     </Wrapper>
   );
@@ -163,10 +159,6 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => (
     {children}
   </Box>
 );
-
-function assertDefined<T>(value: T | undefined): T {
-  return value as T;
-}
 
 const typeToLabel = {
   img: "IMG",

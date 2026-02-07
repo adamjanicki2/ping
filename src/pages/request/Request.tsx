@@ -38,6 +38,19 @@ const additionalInputs: Record<HttpMethod, RequestArgs> = {
   POST: { body: {}, headers: {}, params: {} },
 };
 
+type ArgKey = keyof RequestArgs;
+type ArgValues = Record<string, string>;
+type NewArgState = Record<ArgKey, [string, string]>;
+type DrawerState = Record<ArgKey, boolean>;
+
+const getKeys = (args: RequestArgs) => Object.keys(args) as ArgKey[];
+const initNewArgs = (keys: ArgKey[]): NewArgState =>
+  Object.fromEntries(keys.map((key) => [key, ["", ""]])) as NewArgState;
+const initOpenDrawers = (keys: ArgKey[]): DrawerState =>
+  Object.fromEntries(keys.map((key) => [key, false])) as DrawerState;
+const entries = <T extends object>(obj: T) =>
+  Object.entries(obj) as Array<[keyof T, T[keyof T]]>;
+
 export default function Request() {
   const [searchParams, setSearchParams] = useSearchParams();
   const originalUrl = searchParams.target as string;
@@ -45,22 +58,12 @@ export default function Request() {
   const [url, setUrl] = useState(originalUrl || "");
   const [response, setResponse] = useState<PingResponse>();
   const reqArgs = additionalInputs[method];
-  const [openDrawers, setOpenDrawers] = useState<
-    Record<keyof RequestArgs, boolean>
-  >(
-    Object.fromEntries(
-      Object.keys(reqArgs).map((key) => [key as any, false]),
-    ) as Record<keyof RequestArgs, boolean>,
+  const [args, setArgs] = useState<RequestArgs>({ ...reqArgs });
+  const [newArgs, setNewArgs] = useState<NewArgState>(
+    initNewArgs(getKeys(reqArgs)),
   );
-  const [args, setArgs] = useState<RequestArgs>({
-    ...reqArgs,
-  });
-  const [newArgs, setNewArgs] = useState<
-    Record<keyof RequestArgs, [string, string]>
-  >(
-    Object.fromEntries(
-      Object.keys(reqArgs).map((key) => [key as any, ["", ""]]),
-    ),
+  const [openDrawers, setOpenDrawers] = useState<DrawerState>(
+    initOpenDrawers(getKeys(reqArgs)),
   );
 
   const func = methodToFunc[method];
@@ -79,18 +82,40 @@ export default function Request() {
 
   const resetArgsForMethod = (nextMethod: HttpMethod) => {
     const nextReqArgs = additionalInputs[nextMethod];
+    const keys = getKeys(nextReqArgs);
     setArgs({ ...nextReqArgs });
-    setNewArgs(
-      Object.fromEntries(
-        Object.keys(nextReqArgs).map((key) => [key as any, ["", ""]]),
-      ),
-    );
-    setOpenDrawers(
-      Object.fromEntries(
-        Object.keys(nextReqArgs).map((key) => [key as any, false]),
-      ) as Record<keyof RequestArgs, boolean>,
-    );
+    setNewArgs(initNewArgs(keys));
+    setOpenDrawers(initOpenDrawers(keys));
   };
+
+  const updateNewArgs = (key: ArgKey, next: [string, string]) =>
+    setNewArgs((prev) => ({ ...prev, [key]: next }));
+
+  const addArg = (key: ArgKey) => {
+    const [newKey, newValue] = newArgs[key];
+    if (!newKey || !newValue) return;
+    setArgs((prev) => ({
+      ...prev,
+      [key]: {
+        ...prev[key],
+        [newKey]: newValue,
+      },
+    }));
+    updateNewArgs(key, ["", ""]);
+  };
+
+  const deleteArg = (key: ArgKey, argKey: string) =>
+    setArgs((prev) => {
+      const next = {
+        ...prev,
+        [key]: { ...prev[key] },
+      };
+      delete (next[key] as ArgValues)[argKey];
+      return next;
+    });
+
+  const setDrawerOpen = (key: ArgKey, open: boolean) =>
+    setOpenDrawers((prev) => ({ ...prev, [key]: open }));
 
   return (
     <Page
@@ -135,33 +160,17 @@ export default function Request() {
       </Box>
       <Accordion
         vfx={{ width: "full" }}
-        drawers={(
-          Object.entries(args) as [keyof RequestArgs, Record<string, string>][]
-        ).map(([key, value]) => {
-          const [newArgKey, newArgValue] = newArgs[key];
-          const handleAdd = () => {
-            setArgs({
-              ...args,
-              [key]: {
-                ...args[key],
-                [newArgKey]: newArgValue,
-              },
-            });
-            setNewArgs({
-              ...newArgs,
-              [key]: ["", ""],
-            });
-          };
+        drawers={entries(args).map(([key, value]) => {
+          const argKey = key;
+          const argValue = value as ArgValues;
+          const [newArgKey, newArgValue] = newArgs[argKey];
           const onEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.key === "Enter" && newArgKey && newArgValue) {
-              handleAdd();
-            }
+            if (e.key === "Enter") addArg(argKey);
           };
           return {
-            label: labels[key as keyof typeof labels],
-            open: openDrawers[key],
-            onOpenChange: (open) =>
-              setOpenDrawers((prev) => ({ ...prev, [key]: open })),
+            label: labels[argKey],
+            open: openDrawers[argKey],
+            onOpenChange: (open) => setDrawerOpen(argKey, open),
             content: (
               <Box
                 vfx={{
@@ -171,8 +180,9 @@ export default function Request() {
                   paddingBottom: "m",
                 }}
               >
-                {Object.entries(value).map(([argKey, argValue], j) => (
+                {entries(argValue).map(([key, value]) => (
                   <Badge
+                    key={key}
                     type="static"
                     vfx={{
                       axis: "x",
@@ -180,17 +190,10 @@ export default function Request() {
                       gap: "xs",
                       radius: "max",
                     }}
-                    key={j}
                   >
                     <IconButton
                       icon={xCircle}
-                      onClick={() =>
-                        setArgs((prev) => {
-                          const copy = { ...prev };
-                          delete (copy[key] as any)[argKey];
-                          return copy;
-                        })
-                      }
+                      onClick={() => deleteArg(argKey, key)}
                       aria-label="delete"
                     />
                     <ui.span
@@ -198,7 +201,7 @@ export default function Request() {
                       vfx={{ fontSize: "s" }}
                       style={{ overflowWrap: "break-word" }}
                     >
-                      {argKey} : {argValue}
+                      {key} : {value}
                     </ui.span>
                   </Badge>
                 ))}
@@ -207,10 +210,7 @@ export default function Request() {
                     placeholder="key"
                     value={newArgKey}
                     onChange={(e) =>
-                      setNewArgs({
-                        ...newArgs,
-                        [key]: [e.target.value, newArgValue],
-                      })
+                      updateNewArgs(argKey, [e.target.value, newArgValue])
                     }
                     onKeyUp={onEnter}
                   />
@@ -218,10 +218,7 @@ export default function Request() {
                     placeholder="value"
                     value={newArgValue}
                     onChange={(e) =>
-                      setNewArgs({
-                        ...newArgs,
-                        [key]: [newArgKey, e.target.value],
-                      })
+                      updateNewArgs(argKey, [newArgKey, e.target.value])
                     }
                     onKeyUp={onEnter}
                   />
@@ -229,7 +226,7 @@ export default function Request() {
                 <Button
                   vfx={{ width: "fit" }}
                   disabled={!newArgKey || !newArgValue}
-                  onClick={handleAdd}
+                  onClick={() => addArg(argKey)}
                 >
                   Add
                 </Button>
