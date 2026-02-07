@@ -6,7 +6,7 @@
   width: 70%;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 820px) {
   .mobile-w-100 {
     width: 100%;
   }

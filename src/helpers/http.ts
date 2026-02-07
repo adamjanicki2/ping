@@ -70,7 +70,7 @@ async function httpRequest(config: RequestConfig): Promise<PingResponse> {
       type: "error",
       url,
       error: new Error(
-        `${method} request to ${url} failed with error: ${error.message}`
+        `${method} request to ${url} failed with error: ${error.message}`,
       ),
     };
   }

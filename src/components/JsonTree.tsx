@@ -107,7 +107,7 @@ type PrimitiveType =
   | string
   | boolean
   | number
-  | Function
+  | ((...args: any[]) => unknown)
   | bigint
   | symbol
   | null
@@ -144,6 +144,6 @@ function Primitive({ children: data }: { children: PrimitiveType }) {
   );
 }
 
-const urlRegex =  
+const urlRegex =
   /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
 const isValidUrl = (str: string) => urlRegex.test(str);

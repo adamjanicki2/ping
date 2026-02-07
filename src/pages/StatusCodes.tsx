@@ -2,7 +2,7 @@ import { Box, ui } from "@adamjanicki/ui";
 import React from "react";
 import Heading from "src/components/Heading";
 import PageWrapper from "src/components/PageWrapper";
-import { type StatusCodeEntry,statusCodes } from "src/helpers/codes";
+import { type StatusCodeEntry, statusCodes } from "src/helpers/codes";
 
 const displayNames = {
   info: "Informational",

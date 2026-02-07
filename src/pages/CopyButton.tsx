@@ -3,16 +3,15 @@ import { check, clipboard } from "@adamjanicki/ui/icons";
 import { useState } from "react";
 
 type Props = {
-  text: string;
-  className?: string;
+  children: string;
   type: string;
 };
 
-export default function CopyButton({ text, type, className }: Props) {
+export default function CopyButton({ children, type }: Props) {
   const [copied, setCopied] = useState(false);
 
   const copyCode = () => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(children);
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
   };
@@ -28,7 +27,7 @@ export default function CopyButton({ text, type, className }: Props) {
       variant="secondary"
     >
       <Icon icon={clipboard} />
-      Copy
+      Copy {type}
     </Button>
   );
 }

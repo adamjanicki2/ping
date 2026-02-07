@@ -1,68 +1,65 @@
 import "src/components/nav.css";
 
-import {
-  Box,
-  Link,
-  TripleFade as Hamburger,
-  ui,
-  UnstyledLink,
-  useLocation,
-} from "@adamjanicki/ui";
-import { useEffect, useState } from "react";
+import { Box, Hamburger, Link, ui, UnstyledLink } from "@adamjanicki/ui";
+import { useState } from "react";
 import Logo from "src/img/logo.svg?react";
 
 type NavlinkProps = {
   to: string;
   children: React.ReactNode;
+  onClick: () => void;
 };
 
-const Nav = () => {
-  const { pathname } = useLocation();
+function Navlink(props: NavlinkProps) {
+  return (
+    <ui.li className="navlink-li">
+      <Link className="navlink" {...props} />
+    </ui.li>
+  );
+}
+
+export default function Nav() {
   const [open, setOpen] = useState(false);
   const closeMenu = () => setOpen(false);
 
-  useEffect(() => {
-    closeMenu();
-  }, [pathname]);
-
-  const Navlink = (props: NavlinkProps) => (
-    <li className="navlink-li">
-      <Link className="navlink" onClick={closeMenu} {...props} />
-    </li>
-  );
-
   return (
     <ui.nav
+      vfx={{
+        axis: "x",
+        align: "center",
+        justify: "between",
+        width: "full",
+        paddingY: "s",
+        paddingX: "l",
+      }}
       className="nav"
-      vfx={{ axis: "x", align: "center", justify: "between", paddingY: "s" }}
-      style={{ paddingLeft: 24, paddingRight: 24 }}
     >
       <Box
-        vfx={{ axis: "x", align: "center", justify: "between", width: "full" }}
+        vfx={{ axis: "x", align: "center", justify: "between" }}
         className="bar-container"
       >
-        <UnstyledLink
-          className="nav-title"
-          to="/"
-          vfx={{ axis: "x", align: "center" }}
-        >
-          <Logo height="36px" />
+        <UnstyledLink to="/" onClick={closeMenu}>
+          <Logo height={36} />
         </UnstyledLink>
         <Box className="mobile">
           <Hamburger open={open} onClick={() => setOpen(!open)} />
         </Box>
       </Box>
       <ui.ul
-        className="desktop link-container"
         vfx={{ axis: "x", align: "center", margin: "none" }}
-        style={open ? { display: "flex" } : undefined}
+        className="desktop link-container"
+        style={{ display: open ? "flex" : undefined }}
       >
-        <Navlink to="/request">Request</Navlink>
-        <Navlink to="/about">About</Navlink>
-        <Navlink to="/status-codes">Status Codes</Navlink>
+        <Navlink to="/request" onClick={closeMenu}>
+          Request
+        </Navlink>
+        <Navlink to="/about" onClick={closeMenu}>
+          About
+        </Navlink>
+        <Navlink to="/status-codes" onClick={closeMenu}>
+          Status Codes
+        </Navlink>
       </ui.ul>
     </ui.nav>
   );
-};
-
-export default Nav;
+}

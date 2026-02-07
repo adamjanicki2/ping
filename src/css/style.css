@@ -1,8 +1,7 @@
 :root {
-  --breakpoint: 768px;
   --green: #80dc9d;
   --honeydew: #f3fff3;
-  --ajui-link-color: #078255;
+  --aui-link-color: #078255;
 }
 
 html {
@@ -12,10 +11,6 @@ html {
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overscroll-behavior: none;
   overflow-x: hidden;
   background-color: var(--honeydew);
 }
@@ -28,10 +23,6 @@ p {
   line-height: 1.5;
   overflow-wrap: break-word;
   white-space: pre-wrap;
-}
-
-input {
-  background-color: white !important;
 }
 
 .page-title-text {

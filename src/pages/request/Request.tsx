@@ -9,7 +9,7 @@ import {
   useSearchParams,
 } from "@adamjanicki/ui";
 import { chevronDown, chevronRight } from "@adamjanicki/ui/icons";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Accordion from "src/components/Accordion";
 import PageWrapper from "src/components/PageWrapper";
 import {
@@ -65,15 +65,6 @@ function RequestUi() {
     ),
   );
 
-  useEffect(() => {
-    setArgs({ ...reqArgs });
-    setNewArgs(
-      Object.fromEntries(
-        Object.keys(reqArgs).map((key) => [key as any, ["", ""]]),
-      ),
-    );
-  }, [method, reqArgs]);
-
   const func = methodToFunc[method];
 
   useEffect(() => {
@@ -88,11 +79,15 @@ function RequestUi() {
     setSearchParams((prev) => ({ ...prev, target: url }));
   };
 
-  const memoizedResponse = useMemo(
-    () => <Response response={response} />,
-    // eslint-disable-next-line
-    [response?.id],
-  );
+  const resetArgsForMethod = (nextMethod: HttpMethod) => {
+    const nextReqArgs = additionalInputs[nextMethod];
+    setArgs({ ...nextReqArgs });
+    setNewArgs(
+      Object.fromEntries(
+        Object.keys(nextReqArgs).map((key) => [key as any, ["", ""]]),
+      ),
+    );
+  };
 
   return (
     <Box className="request-container" vfx={{ axis: "y", paddingX: "l" }}>
@@ -113,6 +108,7 @@ function RequestUi() {
           value={method}
           onSelect={(value) => {
             setMethod(value);
+            resetArgsForMethod(value);
             setSearchParams({});
           }}
         />
@@ -260,7 +256,7 @@ function RequestUi() {
           );
         })}
       </Animated>
-      {memoizedResponse}
+      <Response response={response} />
     </Box>
   );
 }
