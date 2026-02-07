@@ -44,7 +44,7 @@ export default function Page({
       {title && (
         <ui.h1
           {...headerProps}
-          vfx={{ textAlign: "center", ...headerProps?.vfx }}
+          vfx={{ textAlign: "center", marginY: "l", ...headerProps?.vfx }}
           className={classNames("page-title-text", headerProps?.className)}
           style={{ whiteSpace: "wrap", wordBreak: "break-word" }}
         >

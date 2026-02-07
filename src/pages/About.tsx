@@ -4,7 +4,7 @@ import Page from "src/components/Page";
 export default function About() {
   return (
     <Page title="About">
-      <Box className="about-content" vfx={{ axis: "y", gap: "m" }}>
+      <Box className="w-70-100" vfx={{ axis: "y", gap: "m" }}>
         <ui.h1 vfx={{ margin: "none" }}>Welcome to Ping!</ui.h1>
         <ui.p vfx={{ margin: "none" }}>
           This is a site where you can play around with making{" "}

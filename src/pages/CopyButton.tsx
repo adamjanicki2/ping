@@ -1,5 +1,5 @@
 import { Badge, Button, Icon } from "@adamjanicki/ui";
-import { check, clipboard } from "@adamjanicki/ui/icons";
+import { check } from "@adamjanicki/ui/icons";
 import { useState } from "react";
 
 type Props = {
@@ -20,13 +20,7 @@ export default function CopyButton({ children, type }: Props) {
       <Icon icon={check} /> Copied
     </Badge>
   ) : (
-    <Button
-      vfx={{ axis: "x", align: "center", gap: "xs", paddingY: "xxs" }}
-      onClick={copyCode}
-      size="small"
-      variant="secondary"
-    >
-      <Icon icon={clipboard} />
+    <Button onClick={copyCode} size="small" variant="secondary">
       Copy {type}
     </Button>
   );

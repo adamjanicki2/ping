@@ -12,12 +12,8 @@ type Props = {
 export default function JsonTree({ children, className }: Props) {
   return (
     <Box
+      vfx={{ overflowX: "auto" }}
       className={classNames("json-tree monospace", className)}
-      style={{
-        whiteSpace: "pre-wrap",
-        overflowX: "scroll",
-        overflowY: "hidden",
-      }}
     >
       <Tree>{children}</Tree>
     </Box>

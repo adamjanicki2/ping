@@ -1,6 +1,7 @@
-.json-tree *,
-.html-tree * {
+.json-tree,
+.html-text {
   font-size: 14px;
+  white-space: pre-wrap;
 }
 
 .json-comma {
@@ -50,8 +51,8 @@
 }
 
 @media only screen and (max-width: 820px) {
-  .json-tree *,
-  .html-tree * {
+  .json-tree,
+  .html-text {
     font-size: 12px;
   }
   .json-elements-container {

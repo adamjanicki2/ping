@@ -1,6 +1,7 @@
 .response-toggle {
   padding: 4px 12px;
   border-bottom: 2px solid transparent;
+  transition: 0.25s;
 }
 
 .response-toggle-selected {
