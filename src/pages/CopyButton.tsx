@@ -1,39 +1,26 @@
-import { Badge, Button } from "@adamjanicki/ui";
-import { classNames } from "@adamjanicki/ui/functions";
-import { faCheck, faClipboard } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Badge, Button, Icon } from "@adamjanicki/ui";
+import { check } from "@adamjanicki/ui/icons";
 import { useState } from "react";
 
 type Props = {
-  text: string;
-  className?: string;
+  children: string;
   type: string;
 };
 
-export default function CopyButton({ text, type, className }: Props) {
+export default function CopyButton({ children, type }: Props) {
   const [copied, setCopied] = useState(false);
 
   const copyCode = () => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(children);
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
   };
-
   return copied ? (
-    <Badge
-      className={classNames("flex items-center", className)}
-      type="success"
-    >
-      <FontAwesomeIcon icon={faCheck} className="mr1" /> Copied
+    <Badge vfx={{ axis: "x", align: "center", gap: "xs" }} type="success">
+      <Icon icon={check} /> Copied
     </Badge>
   ) : (
-    <Button
-      onClick={copyCode}
-      style={{ padding: "3px 6px" }}
-      className={classNames("f6 fw6", className)}
-      variant="secondary"
-    >
-      <FontAwesomeIcon icon={faClipboard} className="mr1" />
+    <Button onClick={copyCode} size="small" variant="secondary">
       Copy {type}
     </Button>
   );

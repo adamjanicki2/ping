@@ -1,14 +1,20 @@
-import { Badge, Button, UnstyledButton } from "@adamjanicki/ui";
-import { assertDefined, classNames } from "@adamjanicki/ui/functions";
+import "src/pages/request/response.css";
+
+import {
+  Badge,
+  Box,
+  Button,
+  ui,
+  UnstyledButton,
+  UnstyledLink,
+} from "@adamjanicki/ui";
+import { classNames } from "@adamjanicki/ui/functions";
 import { useState } from "react";
 import JsonTree from "src/components/JsonTree";
-import { UnstyledLink } from "src/components/Link";
 import { classifyCode, getBadgeType } from "src/helpers/codes";
 import { PingResponse } from "src/helpers/http";
 import CopyButton from "src/pages/CopyButton";
 import { formatBytes } from "src/util";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import "src/pages/request/response.css";
 
 export default function Response({ response }: { response?: PingResponse }) {
   const [showIframe, setShowIframe] = useState(true);
@@ -16,120 +22,141 @@ export default function Response({ response }: { response?: PingResponse }) {
 
   if (!response) return null;
 
-  const Wrapper = ({ children }: { children: React.ReactNode }) => (
-    <div
-      id="response"
-      className="flex flex-column w-100 mt3 br2 ba b--moon-gray"
-    >
-      {children}
-    </div>
-  );
-
-  let {
-    statusCode,
-    text,
+  const {
+    statusCode = 0,
+    text = "",
     json,
     html,
-    duration,
+    duration = 0,
     error,
     url,
     type,
     size,
-    responseHeaders,
+    responseHeaders = {},
   } = response;
 
   if (error) {
     return (
       <Wrapper>
-        <div className="flex items-center pa2 bg-light-gray">
-          <Badge type="error">Unknown error</Badge>
-        </div>
-        <div
-          className="pa2 br2 br--bottom"
-          style={{ backgroundColor: "#fffcff" }}
+        <Box
+          vfx={{
+            axis: "x",
+            align: "center",
+            padding: "s",
+            backgroundColor: "default",
+          }}
         >
+          <Badge type="error">Unknown error</Badge>
+        </Box>
+        <Box vfx={{ padding: "s", backgroundColor: "default" }}>
           <TextResponse>{error.toString()}</TextResponse>
-        </div>
+        </Box>
       </Wrapper>
     );
   }
 
-  statusCode = assertDefined(statusCode);
-  duration = assertDefined(duration);
-  text = assertDefined(text);
-  responseHeaders = assertDefined(responseHeaders);
   const info = classifyCode(statusCode);
-
-  let section = <TextResponse>{text}</TextResponse>;
-  if (json) section = <JsonResponse>{json}</JsonResponse>;
-  else if (html)
-    section = <HtmlResponse showIframe={showIframe} url={url} html={html} />;
-  else if (type === "img") section = <ImgResponse url={url} />;
+  const section = json ? (
+    <JsonTree>{json}</JsonTree>
+  ) : html ? (
+    <HtmlResponse showIframe={showIframe} html={html} />
+  ) : type === "img" ? (
+    <ImgResponse url={url} />
+  ) : (
+    <TextResponse>{text}</TextResponse>
+  );
+  const toggleOptions = [
+    { label: "Data", value: true },
+    { label: "Headers", value: false },
+  ] as const;
 
   return (
     <Wrapper>
-      <div className="flex items-center justify-between pa2 bg-light-gray br2 br--top flex-wrap bb b--moon-gray">
-        <span className="flex items-center">
+      <Box
+        vfx={{
+          axis: "x",
+          align: "center",
+          justify: "between",
+          padding: "s",
+          wrap: true,
+          borderBottom: true,
+          backgroundColor: "muted",
+        }}
+      >
+        <Box vfx={{ axis: "x", align: "center", gap: "s", wrap: true }}>
           <UnstyledLink to={`/status-codes#${statusCode}`}>
             <Badge type={getBadgeType(info.type)}>
               {statusCode} {info.name}
             </Badge>
           </UnstyledLink>
-          <span className="fw7 mh2" style={{ color: "#055437" }}>
+          <ui.span vfx={{ fontWeight: 7 }} style={{ color: "#055437" }}>
             {typeToLabel[type]}
-          </span>
-          <span className="f6 fw7">{duration}ms</span>
-          {size && <span className="f6 fw7 ml2">{formatBytes(size)}</span>}
-        </span>
-        <div className="flex items-center mv2">
+          </ui.span>
+          <ui.span vfx={{ fontSize: "s", fontWeight: 7 }}>{duration}ms</ui.span>
+          {size && (
+            <ui.span vfx={{ fontSize: "s", fontWeight: 7 }}>
+              {formatBytes(size)}
+            </ui.span>
+          )}
+        </Box>
+        <Box vfx={{ axis: "x", align: "center", gap: "s" }}>
           {html && (
             <Button
-              style={{ padding: "3px 6px" }}
-              className="f6 fw6 mr2"
               variant="secondary"
               onClick={() => {
                 setShowIframe(!showIframe);
                 setShowData(true);
               }}
+              size="small"
             >
               {showIframe ? "Show raw HTML" : "Show preview"}
             </Button>
           )}
           <CopyButton
-            text={text || url}
             type={
               json ? "JSON" : html ? "HTML" : type === "img" ? "URL" : "text"
             }
-          />
-        </div>
-      </div>
-      <div
-        className="pa2 br2 br--bottom"
-        style={{ backgroundColor: "#fffcff" }}
-      >
-        <div className="flex items-center pb2">
-          <UnstyledButton
-            className={classNames(
-              "response-toggle f6 fw6",
-              showData ? "response-toggle-selected" : null
-            )}
-            onClick={() => setShowData(true)}
           >
-            Data
-          </UnstyledButton>
-          <UnstyledButton
-            className={classNames(
-              "response-toggle f6 fw6",
-              !showData ? "response-toggle-selected" : null
-            )}
-            onClick={() => setShowData(false)}
-          >
-            Headers
-          </UnstyledButton>
-        </div>
-        {showData ? section : <JsonResponse>{responseHeaders}</JsonResponse>}
-      </div>
+            {text || url}
+          </CopyButton>
+        </Box>
+      </Box>
+      <Box vfx={{ padding: "s", backgroundColor: "default" }}>
+        <Box vfx={{ axis: "x", align: "center", paddingBottom: "s" }}>
+          {toggleOptions.map((toggle) => (
+            <UnstyledButton
+              key={toggle.label}
+              className={classNames(
+                "response-toggle",
+                showData === toggle.value ? "response-toggle-selected" : null,
+              )}
+              vfx={{ fontSize: "s", fontWeight: 6 }}
+              onClick={() => setShowData(toggle.value)}
+            >
+              {toggle.label}
+            </UnstyledButton>
+          ))}
+        </Box>
+        {showData ? section : <JsonTree>{responseHeaders}</JsonTree>}
+      </Box>
     </Wrapper>
+  );
+}
+
+function Wrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <Box
+      id="response"
+      vfx={{
+        axis: "y",
+        width: "full",
+        border: true,
+        radius: "rounded",
+        overflow: "hidden",
+      }}
+    >
+      {children}
+    </Box>
   );
 }
 
@@ -146,52 +173,38 @@ type WrapperProps = {
 };
 
 function TextResponse({ children }: WrapperProps) {
-  return <p>{children ? children : "The response was empty."}</p>;
+  return (
+    <ui.p vfx={{ margin: "none" }}>
+      {children ? children : "The response was empty."}
+    </ui.p>
+  );
 }
 
 function HtmlResponse({
-  url,
   html,
   showIframe,
 }: {
-  url: string;
   html: string;
   showIframe: boolean;
 }) {
   return showIframe ? (
-    <iframe
-      title="HTML display"
-      src={url}
-      sandbox="allow-scripts allow-popups"
+    <ui.iframe
+      title="HTML Response"
+      srcDoc={html}
+      sandbox="allow-scripts allow-modals"
       referrerPolicy="no-referrer"
-      width="100%"
-      height="100%"
-      className="mv2"
-      style={{ minHeight: "45vh", border: "none" }}
+      vfx={{ border: false, width: "full" }}
+      style={{ minHeight: "45vh" }}
     />
   ) : (
-    <SyntaxHighlighter
-      children={html.trim()}
-      language="html"
-      customStyle={{
-        background: "none",
-        backgroundColor: "transparent",
-        padding: 0,
-        margin: 0,
-      }}
-      className="html-tree monospace"
-    />
+    <ui.code children={html.trim()} className="html-text" />
   );
-}
-
-function JsonResponse({ children }: { children: object }) {
-  return <JsonTree className="mv2">{children}</JsonTree>;
 }
 
 function ImgResponse({ url }: { url: string }) {
   return (
-    <div className="flex justify-center pv2">
-      <img src={url} alt="" />
-    </div>
+    <Box vfx={{ axis: "x", justify: "center" }}>
+      <ui.img src={url} alt="" />
+    </Box>
   );
 }

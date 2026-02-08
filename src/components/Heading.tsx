@@ -1,4 +1,4 @@
-import Link from "src/components/Link";
+import { Link, ui } from "@adamjanicki/ui";
 import React from "react";
 
 type Props = {
@@ -22,14 +22,13 @@ function headingToId(heading: string) {
     .replace(/[^a-zA-Z0-9-]/g, "");
 }
 
-const Heading = ({ level, children, id }: Props) => {
+export default function Heading({ level, children, id }: Props) {
   id ||= headingToId(children);
+  const Tag = ui[`h${level}` as "h1" | "h2" | "h3" | "h4"];
   return React.createElement(
-    `h${level}`,
-    { id, className: "has-octo-within flex items-center" },
+    Tag,
+    { id, className: "has-octo-within", vfx: { axis: "x", align: "center" } },
     <HashLink id={id} />,
-    children
+    children,
   );
-};
-
-export default Heading;
+}

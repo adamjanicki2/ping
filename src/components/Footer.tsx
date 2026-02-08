@@ -1,19 +1,24 @@
-import Link from "src/components/Link";
+import { Link, ui } from "@adamjanicki/ui";
 
-const Footer = () => (
-  <footer className="pv5 ph2 flex bt b--moon-gray bw1 items-center justify-center w-100">
-    <p className="fw5 f5 tc">
-      Est. 2025 Built from scratch by{" "}
-      <Link
-        target="_blank"
-        rel="noreferrer"
-        className="link"
-        to="https://adamjanicki.xyz"
-      >
-        Adam
-      </Link>
-    </p>
-  </footer>
-);
-
-export default Footer;
+export default function Footer() {
+  return (
+    <ui.footer
+      vfx={{
+        axis: "x",
+        align: "center",
+        justify: "center",
+        paddingY: "xxl",
+        paddingX: "s",
+        borderTop: true,
+        borderWidth: "s",
+      }}
+    >
+      <ui.p vfx={{ fontWeight: 5, textAlign: "center" }}>
+        Est. 2025 Built from scratch by{" "}
+        <Link newTab to="https://adamjanicki.xyz">
+          Adam
+        </Link>
+      </ui.p>
+    </ui.footer>
+  );
+}

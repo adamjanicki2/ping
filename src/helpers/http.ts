@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import isHtml from "is-html";
 import prettier from "prettier";
 import * as plugin from "prettier/plugins/html";
 
@@ -35,7 +34,7 @@ export type PingResponse = {
   text?: string;
   statusCode?: number;
   html?: string;
-  json?: Object;
+  json?: object;
   duration?: number;
   type: "error" | "text" | "json" | "html" | "img";
   size?: number;
@@ -70,7 +69,7 @@ async function httpRequest(config: RequestConfig): Promise<PingResponse> {
       type: "error",
       url,
       error: new Error(
-        `${method} request to ${url} failed with error: ${error.message}`
+        `${method} request to ${url} failed with error: ${error.message}`,
       ),
     };
   }
@@ -101,7 +100,7 @@ async function httpRequest(config: RequestConfig): Promise<PingResponse> {
     return { ...pingResponse, json: data, type: "json" };
   }
 
-  if (isHtml(pingResponse.text)) {
+  if (contentType?.startsWith("text/html")) {
     const html = await prettifyHtml(pingResponse.text);
     return { ...pingResponse, html, type: "html" };
   }

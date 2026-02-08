@@ -1,8 +1,8 @@
-import { UnstyledButton } from "@adamjanicki/ui";
+import "src/components/json.css";
+
+import { Box, ui, UnstyledButton, UnstyledLink } from "@adamjanicki/ui";
 import { classNames } from "@adamjanicki/ui/functions";
 import { useState } from "react";
-import "src/components/json.css";
-import { UnstyledLink } from "src/components/Link";
 
 type Props = {
   children: any;
@@ -11,16 +11,12 @@ type Props = {
 
 export default function JsonTree({ children, className }: Props) {
   return (
-    <div
+    <Box
+      vfx={{ overflowX: "auto" }}
       className={classNames("json-tree monospace", className)}
-      style={{
-        whiteSpace: "pre-wrap",
-        overflowX: "scroll",
-        overflowY: "hidden",
-      }}
     >
       <Tree>{children}</Tree>
-    </div>
+    </Box>
   );
 }
 
@@ -32,33 +28,35 @@ type TreeProps = {
 function Tree({ children: data, includeComma = false }: TreeProps) {
   const [collapsed, setCollapsed] = useState(false);
   const type = typeof data;
-  const comma = includeComma ? <span className="json-comma">,</span> : null;
+  const comma = includeComma ? (
+    <ui.span className="json-comma">,</ui.span>
+  ) : null;
 
   // Array
   if (Array.isArray(data)) {
     const arraySize = data.length;
     return (
       <>
-        <span className="json-token">
+        <ui.span className="json-token">
           <UnstyledButton onClick={() => setCollapsed(!collapsed)}>
             {collapsed ? "[…" : "["}
           </UnstyledButton>
-        </span>
+        </ui.span>
         {arraySize > 0 && !collapsed && (
-          <div className="json-elements-container">
+          <Box className="json-elements-container">
             {data.map((node, index) => (
-              <div key={index}>
+              <Box key={index}>
                 <Tree includeComma={index < data.length - 1}>{node}</Tree>
-              </div>
+              </Box>
             ))}
-          </div>
+          </Box>
         )}
-        <span className="json-token">{"]"}</span>
+        <ui.span className="json-token">{"]"}</ui.span>
         {comma}{" "}
         {collapsed && (
-          <span className="json-comment">
+          <ui.span className="json-comment">
             {"//"} {arraySize} {arraySize > 1 ? "elements" : "element"}
-          </span>
+          </ui.span>
         )}
       </>
     );
@@ -69,27 +67,27 @@ function Tree({ children: data, includeComma = false }: TreeProps) {
     const objectSize = entries.length;
     return (
       <>
-        <span className="json-token">
+        <ui.span className="json-token">
           <UnstyledButton onClick={() => setCollapsed(!collapsed)}>
             {collapsed ? "{…" : "{"}
           </UnstyledButton>
-        </span>
+        </ui.span>
         {entries.length > 0 && !collapsed && (
-          <div className="json-elements-container">
+          <Box className="json-elements-container">
             {entries.map(([key, value], i) => (
-              <div key={i}>
-                <span className="json-key">"{key}":</span>{" "}
+              <Box key={i}>
+                <ui.span className="json-key">"{key}":</ui.span>{" "}
                 <Tree includeComma={i < entries.length - 1}>{value}</Tree>
-              </div>
+              </Box>
             ))}
-          </div>
+          </Box>
         )}
-        <span className="json-token">{"}"}</span>
+        <ui.span className="json-token">{"}"}</ui.span>
         {comma}{" "}
         {collapsed && (
-          <span className="json-comment">
+          <ui.span className="json-comment">
             {"//"} {objectSize} {objectSize > 1 ? "entries" : "entry"}
-          </span>
+          </ui.span>
         )}
       </>
     );
@@ -107,22 +105,22 @@ type PrimitiveType =
   | string
   | boolean
   | number
-  | Function
-  | BigInt
-  | Symbol
+  | ((...args: any[]) => unknown)
+  | bigint
+  | symbol
   | null
   | undefined;
 
 function Primitive({ children: data }: { children: PrimitiveType }) {
   const type = typeof data;
-  let node: React.ReactNode = `${data}`;
+  let node: React.ReactNode = String(data);
   let className = "";
   if (type === "string") {
     if (isValidUrl(data as string)) {
       node = (
         <>
           "
-          <UnstyledLink target="_blank" rel="noreferrer" to={data as string}>
+          <UnstyledLink newTab to={data as string}>
             {data as string}
           </UnstyledLink>
           "
@@ -130,20 +128,20 @@ function Primitive({ children: data }: { children: PrimitiveType }) {
       );
       className = "json-primitive-string-url";
     } else {
-      node = `"${data}"`;
+      node = `"${String(data)}"`;
     }
   }
 
   // default leaf
   return (
-    <span
+    <ui.span
       className={classNames(`json-primitive json-primitive-${type}`, className)}
     >
       {node}
-    </span>
+    </ui.span>
   );
 }
 
-const urlRegex = // eslint-disable-next-line
+const urlRegex =
   /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
 const isValidUrl = (str: string) => urlRegex.test(str);
