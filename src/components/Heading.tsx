@@ -22,7 +22,7 @@ function headingToId(heading: string) {
     .replace(/[^a-zA-Z0-9-]/g, "");
 }
 
-const Heading = ({ level, children, id }: Props) => {
+export default function Heading({ level, children, id }: Props) {
   id ||= headingToId(children);
   const Tag = ui[`h${level}` as "h1" | "h2" | "h3" | "h4"];
   return React.createElement(
@@ -31,6 +31,4 @@ const Heading = ({ level, children, id }: Props) => {
     <HashLink id={id} />,
     children,
   );
-};
-
-export default Heading;
+}

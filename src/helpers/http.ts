@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import isHtml from "is-html";
 import prettier from "prettier";
 import * as plugin from "prettier/plugins/html";
 
@@ -101,7 +100,7 @@ async function httpRequest(config: RequestConfig): Promise<PingResponse> {
     return { ...pingResponse, json: data, type: "json" };
   }
 
-  if (isHtml(pingResponse.text)) {
+  if (contentType.startsWith("text/html")) {
     const html = await prettifyHtml(pingResponse.text);
     return { ...pingResponse, html, type: "html" };
   }

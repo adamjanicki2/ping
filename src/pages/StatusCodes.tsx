@@ -1,4 +1,4 @@
-import { Box, ui } from "@adamjanicki/ui";
+import { Box, ui, useScrollToHash } from "@adamjanicki/ui";
 import React from "react";
 import Heading from "src/components/Heading";
 import Page from "src/components/Page";
@@ -24,6 +24,8 @@ const statusCodeGroups: [string, [string, StatusCodeEntry][]][] = [
 ]);
 
 export default function StatusCodes() {
+  useScrollToHash();
+
   return (
     <Page title="Status Codes">
       <Box vfx={{ width: "full", paddingX: "xxl" }}>

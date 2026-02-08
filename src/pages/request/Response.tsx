@@ -145,20 +145,22 @@ export default function Response({ response }: { response?: PingResponse }) {
   );
 }
 
-const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <Box
-    id="response"
-    vfx={{
-      axis: "y",
-      width: "full",
-      border: true,
-      radius: "rounded",
-      overflow: "hidden",
-    }}
-  >
-    {children}
-  </Box>
-);
+function Wrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <Box
+      id="response"
+      vfx={{
+        axis: "y",
+        width: "full",
+        border: true,
+        radius: "rounded",
+        overflow: "hidden",
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
 
 const typeToLabel = {
   img: "IMG",
