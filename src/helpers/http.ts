@@ -100,7 +100,7 @@ async function httpRequest(config: RequestConfig): Promise<PingResponse> {
     return { ...pingResponse, json: data, type: "json" };
   }
 
-  if (contentType.startsWith("text/html")) {
+  if (contentType?.startsWith("text/html")) {
     const html = await prettifyHtml(pingResponse.text);
     return { ...pingResponse, html, type: "html" };
   }
