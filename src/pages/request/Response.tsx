@@ -59,7 +59,7 @@ export default function Response({ response }: { response?: PingResponse }) {
   const section = json ? (
     <JsonTree>{json}</JsonTree>
   ) : html ? (
-    <HtmlResponse showIframe={showIframe} url={url} html={html} />
+    <HtmlResponse showIframe={showIframe} html={html} />
   ) : type === "img" ? (
     <ImgResponse url={url} />
   ) : (
@@ -92,9 +92,7 @@ export default function Response({ response }: { response?: PingResponse }) {
           <ui.span vfx={{ fontWeight: 7 }} style={{ color: "#055437" }}>
             {typeToLabel[type]}
           </ui.span>
-          <ui.span vfx={{ fontSize: "s", fontWeight: 7 }}>
-            {duration}ms
-          </ui.span>
+          <ui.span vfx={{ fontSize: "s", fontWeight: 7 }}>{duration}ms</ui.span>
           {size && (
             <ui.span vfx={{ fontSize: "s", fontWeight: 7 }}>
               {formatBytes(size)}
@@ -183,19 +181,17 @@ function TextResponse({ children }: WrapperProps) {
 }
 
 function HtmlResponse({
-  url,
   html,
   showIframe,
 }: {
-  url: string;
   html: string;
   showIframe: boolean;
 }) {
   return showIframe ? (
     <ui.iframe
       title="HTML Response"
-      src={url}
-      sandbox="allow-scripts allow-popups"
+      srcDoc={html}
+      sandbox="allow-scripts allow-modals"
       referrerPolicy="no-referrer"
       vfx={{ border: false, width: "full" }}
       style={{ minHeight: "45vh" }}
